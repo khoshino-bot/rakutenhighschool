@@ -14,7 +14,22 @@ JOB DRAFT FES 2026 おしごと体験ブース用の料金見積ツール。**`i
 - `index.html`（端末画像を使う場合は `img/` フォルダも）をそのままコピーするだけ。AirDrop・USB・共有ドライブいずれでも可
 - 画像を使わない場合は本当に1ファイルだけで動きます
 
+## 公開ページ（GitHub Pages）
+
+- 公開URL: https://khoshino-bot.github.io/rakutenhighschool/
+- タブレットでこのURLを一度開いておけば、以降は Wi-Fi が無くても表示できます（`sw.js` がページを端末内に保存します）
+- GitHub 上で `index.html` を書き換えると、1〜2分で公開ページに反映されます。タブレット側は Wi-Fi に繋いだ状態でページを再読み込みすると新しい内容に切り替わります
+
 ## 金額・名称の変え方（プログラム知識は不要）
+
+### GitHub のサイト上で変える（おすすめ）
+
+1. https://github.com/khoshino-bot/rakutenhighschool/blob/main/index.html を開く
+2. 右上の鉛筆アイコン（Edit）を押す
+3. `★★ マスタデータ` と書かれた場所の下にある `MASTER` の中だけを書き換える
+4. 右上の「Commit changes...」→ もう一度「Commit changes」を押す
+
+### 手元のファイルで変える
 
 `index.html` をテキストエディタで開き、`★★ マスタデータ` と書かれた場所の下にある `MASTER` の中だけを書き換えて保存します。
 

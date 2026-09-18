@@ -52,9 +52,14 @@
     background: var(--navy);
     color: #fff;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0 20px;
-    padding-top: env(safe-area-inset-top);
+    padding: env(safe-area-inset-top) calc(20px + env(safe-area-inset-right)) 0 calc(20px + env(safe-area-inset-left));
   }
+  .header .right { display: flex; align-items: center; gap: 16px; }
+  .header .reset-btn {
+    min-height: 44px; padding: 6px 16px; border-radius: 8px; font-size: 14px; font-weight: 600;
+    background: transparent; color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.3);
+  }
+  .header .reset-btn:active { background: rgba(255,255,255,0.1); }
   .header .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
   .header .brand .mark {
     width: 40px; height: 40px; border-radius: 10px; flex: none;
@@ -82,14 +87,14 @@
   /* ===== メイン ===== */
   .main {
     max-width: 1200px; margin: 0 auto;
-    padding: calc(var(--header-h) + 24px + env(safe-area-inset-top)) 20px calc(var(--bar-h) + 40px + env(safe-area-inset-bottom));
+    padding: calc(var(--header-h) + 24px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) calc(var(--bar-h) + 40px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
   }
   .main.no-bar { padding-bottom: 40px; }
   .screen-title { font-size: 32px; font-weight: 700; line-height: 1.3; margin-bottom: 4px; }
   .screen-lead { color: var(--sub); font-size: 16px; margin-bottom: 24px; }
   .section-title { font-size: 20px; font-weight: 600; margin: 40px 0 12px; display: flex; align-items: center; gap: 10px; }
   .section-title::before { content: ''; width: 5px; height: 24px; background: var(--gold); border-radius: 2px; }
-  .hint { color: var(--sub); font-size: 14px; line-height: 1.6; }
+  .hint { color: var(--sub); font-size: 16px; line-height: 1.6; }
 
   /* カード共通 */
   .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
@@ -112,7 +117,7 @@
   .card.selected .check { background: var(--gold); border-color: var(--gold); }
   .card .check.box { border-radius: 8px; }
   .card .title { font-size: 20px; font-weight: 600; line-height: 1.4; padding-right: 40px; }
-  .card .desc { color: var(--sub); font-size: 14px; line-height: 1.6; }
+  .card .desc { color: var(--sub); font-size: 16px; line-height: 1.6; }
   .card .price { font-size: 28px; font-weight: 700; color: var(--navy); line-height: 1.2; letter-spacing: -0.01em; }
   .card .price small { font-size: 14px; font-weight: 400; color: var(--sub); margin-left: 4px; letter-spacing: 0; }
   .card .tag {
@@ -148,7 +153,7 @@
   .toggle.on { border-color: var(--gold); background: #fffdf7; }
   .toggle .t-body { min-width: 0; flex: 1; }
   .toggle .t-name { font-weight: 600; font-size: 18px; line-height: 1.4; }
-  .toggle .t-desc { color: var(--sub); font-size: 14px; line-height: 1.6; }
+  .toggle .t-desc { color: var(--sub); font-size: 16px; line-height: 1.6; }
   .toggle .t-amt { font-weight: 700; color: var(--navy); white-space: nowrap; font-size: 18px; }
   .toggle .sw {
     flex: none; width: 56px; height: 32px; border-radius: 999px; background: #cbd5e1; position: relative; transition: background 0.15s;
@@ -221,7 +226,7 @@
   .bar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 1000;
     background: var(--navy); color: #fff;
-    padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+    padding: 12px calc(20px + env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
     box-shadow: 0 -4px 24px rgba(0,0,0,0.25);
   }
   .bar .inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
@@ -269,7 +274,10 @@
     <div class="mark">診</div>
     <div class="name">最強プラン診断士<small>かんたん見積システム</small></div>
   </div>
-  <nav class="steps" id="steps" aria-label="ステップ"></nav>
+  <div class="right">
+    <nav class="steps" id="steps" aria-label="ステップ"></nav>
+    <button class="reset-btn" id="headerReset" data-act="reset" hidden>最初から</button>
+  </div>
 </header>
 
 <main class="main" id="app"></main>
@@ -402,6 +410,8 @@ function render() {
 }
 
 function renderSteps() {
+  // 途中で体験者が離れても、スタッフがすぐ初期化できるようヘッダーにも「最初から」を常設（S1〜S3）
+  document.getElementById('headerReset').hidden = state.screen === 0 || state.screen === 4;
   if (state.screen === 0) { stepsEl.innerHTML = ''; return; }
   const names = ['端末', 'プラン', 'オプション', '結果'];
   stepsEl.innerHTML = names.map((n, i) => {
@@ -570,13 +580,22 @@ function renderBar(c) {
   lastTotal = c.total;
   bar.innerHTML = `
     <div class="inner">
-      <div class="total"><span class="lbl">いまの月額合計</span><span class="amt ${bump}">${yen(c.total)}<small>/月</small></span></div>
+      <div class="total" aria-live="polite"><span class="lbl">いまの月額合計</span><span class="amt ${bump}">${yen(c.total)}<small>/月</small></span></div>
       <div class="nav">${nav}</div>
     </div>`;
 }
 
 /* ===================== 操作 ===================== */
+// 画面遷移だけは連打を防ぐ（1回目の描画直後に同じ位置の別ボタンへ2回目が当たるのを防止）。選択操作は即時。
+const NAV_ACTS = new Set(['start', 'next', 'back', 'reset']);
+let navLockUntil = 0;
+
 function handle(act, id) {
+  if (NAV_ACTS.has(act)) {
+    const now = Date.now();
+    if (now < navLockUntil) return;
+    navLockUntil = now + 400;
+  }
   switch (act) {
     case 'start':    state.screen = 1; break;
     case 'next':     if (state.screen < 4) state.screen += 1; break;
@@ -597,9 +616,6 @@ document.addEventListener('click', (e) => {
   if (!el || el.disabled) return;
   handle(el.dataset.act, el.dataset.id);
 });
-
-// ダブルタップでの拡大を防ぐ（タブレット）
-document.addEventListener('dblclick', (e) => e.preventDefault(), { passive: false });
 
 // オフライン対応: Webで開いたときだけ Service Worker（sw.js）を登録する。
 // 一度開けば会場の Wi-Fi が切れても表示できる。ファイル直開き（file://）では何もしない。
