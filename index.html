@@ -8,12 +8,13 @@
 <title>最強プラン診断士 かんたん見積システム</title>
 <style>
   :root {
-    --brand: #bf0000;          /* メインカラー（選択・強調） */
-    --brand-dark: #990000;
-    --brand-pale: #fdf1f1;
-    --seg-plan: #bf0000;       /* 支払いイメージの帯: プラン */
-    --seg-opt: #e4657a;        /*                     オプション */
-    --seg-dev: #f3c2cb;        /*                     製品代金 */
+    /* PLACZ デザインルール（ライトテーマ）: ネイビー × ゴールド */
+    --brand: #c9a84c;          /* Gold: 選択・強調・CTA */
+    --brand-dark: #b8942e;     /* Gold Dark */
+    --brand-pale: rgba(201, 168, 76, 0.12);
+    --seg-plan: #1f3a66;       /* 支払いイメージの帯: プラン（Navy Mid） */
+    --seg-opt: #c9a84c;        /*                     オプション（Gold） */
+    --seg-dev: #e9dcae;        /*                     製品代金（Gold 薄） */
     --navy: #1a2332;
     --bg: #f3f4f6;
     --surface: #ffffff;
@@ -49,7 +50,7 @@
     width: 40px; height: 40px; border-radius: 10px; background: var(--brand); color: #fff;
     font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center; flex: none;
   }
-  .logo .name { font-weight: 800; font-size: 20px; color: var(--brand); white-space: nowrap; line-height: 1.2; }
+  .logo .name { font-weight: 800; font-size: 20px; color: var(--navy); white-space: nowrap; line-height: 1.2; }
   .logo .name small { display: block; font-size: 12px; font-weight: 600; color: var(--sub); letter-spacing: 0.06em; }
   .btn-reset {
     min-height: 44px; padding: 8px 20px; border-radius: 8px; font-size: 15px; font-weight: 600;
@@ -58,12 +59,12 @@
   .btn-reset:active { background: var(--surface2); }
 
   /* ===== タブ（雰囲気用・機能はモバイルのみ） ===== */
-  .tabs { display: flex; border-bottom: 3px solid var(--brand); margin-bottom: 20px; }
+  .tabs { display: flex; border-bottom: 3px solid var(--navy); margin-bottom: 20px; }
   .tabs span {
     flex: 1; text-align: center; padding: 12px 8px; font-weight: 700; font-size: 18px; color: var(--sub);
     background: var(--surface); border-radius: 10px 10px 0 0;
   }
-  .tabs span.on { background: var(--brand); color: #fff; }
+  .tabs span.on { background: var(--navy); color: #fff; }
 
   /* ===== レイアウト ===== */
   .main {
@@ -94,12 +95,17 @@
   .choice.big { min-height: 84px; }
   .choice.big .title { font-size: 20px; font-weight: 800; }
 
+  /* 容量ボタン */
+  .caps { display: flex; flex-wrap: wrap; gap: 8px; }
+  .caps .choice { flex: 1 1 calc(25% - 8px); min-width: 96px; min-height: 60px; }
+
   /* プランボタン */
   .plan-btn {
     width: 100%; min-height: 72px; border-radius: 8px; border: 2px solid var(--brand); background: var(--brand); color: #fff;
     display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 16px; text-align: center;
   }
   .plan-btn .pn { font-weight: 800; font-size: 20px; line-height: 1.3; }
+  .plan-btn { background: var(--navy); border-color: var(--navy); }
   .plan-btn .pr { font-size: 15px; font-weight: 600; opacity: 0.95; }
 
   /* データ量（3枚） */
@@ -109,10 +115,10 @@
     display: flex; flex-direction: row; align-items: center; text-align: left; gap: 12px; width: 100%;
   }
   .tier .gb { font-size: 20px; font-weight: 800; line-height: 1.3; flex: none; width: 88px; }
-  .tier .price { font-size: 18px; font-weight: 800; color: var(--brand); line-height: 1.3; flex: none; white-space: nowrap; }
+  .tier .price { font-size: 18px; font-weight: 800; color: var(--navy); line-height: 1.3; flex: none; white-space: nowrap; }
   .tier .hint { font-size: 14px; color: var(--sub); line-height: 1.5; flex: 1; }
   .tier.on { background: var(--brand-pale); border-color: var(--brand); }
-  .tier.on .gb { color: var(--brand); }
+  .tier.on .gb { color: var(--brand-dark); }
 
   /* チェック行 */
   .check {
@@ -129,9 +135,9 @@
   .check .name { display: block; font-weight: 700; font-size: 17px; line-height: 1.4; }
   .check .desc { display: block; font-size: 14px; color: var(--sub); line-height: 1.5; }
   .check .price { flex: none; font-weight: 800; font-size: 17px; white-space: nowrap; }
-  .check.on .price { color: var(--brand); }
+  .check.on .price { color: var(--brand-dark); }
   .check .price.minus { color: var(--sub); }
-  .check.on .price.minus { color: var(--brand); }
+  .check.on .price.minus { color: var(--brand-dark); }
 
   /* セレクト */
   .select {
@@ -189,13 +195,14 @@
   .bar .s-plan { background: var(--seg-plan); }
   .bar .s-opt { background: var(--seg-opt); }
   .bar .s-dev { background: var(--seg-dev); color: var(--navy); }
+  .bar .s-opt { color: #fff; }
   .bar .s-empty { flex: 1; color: var(--disabled); font-weight: 600; }
   .breakdown { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 12px; font-size: 15px; color: var(--sub); }
   .breakdown b { color: var(--text); font-weight: 700; margin-left: 4px; }
-  .breakdown .minus b { color: var(--brand); }
+  .breakdown .minus b { color: var(--brand-dark); }
   .total { text-align: right; min-width: 260px; }
   .total .k { font-size: 15px; font-weight: 700; color: var(--sub); }
-  .total .v { font-size: 56px; font-weight: 800; color: var(--brand); line-height: 1.1; letter-spacing: -0.01em; white-space: nowrap; }
+  .total .v { font-size: 56px; font-weight: 800; color: var(--navy); line-height: 1.1; letter-spacing: -0.01em; white-space: nowrap; }
   .total .v small { font-size: 22px; margin-left: 4px; }
   .total .v.bump { animation: bump 0.25s ease-out; }
   @keyframes bump { 40% { transform: scale(1.05); } }
@@ -249,7 +256,8 @@
    ★★ マスタデータ（ここだけ直せば全画面に反映されます） ★★
    ---------------------------------------------------------------------
    投入日: 2026-09-19
-   注意 : 金額・機種・名称はすべて「仮の値」です。第8事業部が店頭で使う
+   注意 : 製品（devices）は楽天モバイル公式サイトの製品価格を 2026-09-19 に調査して投入（出典は devices の上に記載）。
+          それ以外（プラン・割引・オプション）の金額と名称は「仮の値」です。第8事業部が店頭で使う
           最新の公式価格に差し替えてください（税込で入力）。
           プラン名は楽天モバイルの正式名称を使わず、独自の名前にしています。
    ===================================================================== */
@@ -290,15 +298,75 @@ const MASTER = {
     { id: 'remote',   name: '電話でスマホ操作サポート',   who: 'スマホの使い方を電話で教えてほしい人に',               price: 550 },
   ],
 
-  // ---- 製品（brand ごとにまとめて表示。image は同じフォルダの画像パス、空なら仮イラスト）----
-  // pointBack は購入時のポイント還元。月額には含めず別表示。無ければ 0。
+  // ---- 製品（brand → 機種 → 容量 の順に選ぶ）----
+  // 出典: 楽天モバイル公式 製品ページ／iPhone価格一覧（価格基準日 2026-09-14、税込・キャンペーン前の製品価格）
+  //       https://network.mobile.rakuten.co.jp/product/iphone/fee/  https://network.mobile.rakuten.co.jp/product/smartphone/
+  // 調査日 2026-09-19。公式で確認できた容量だけを入れている（未確認の容量は入れていない）。
+  // image は同じフォルダの画像パス（空なら仮イラスト）。pointBack は購入時のポイント還元（月額には含めず別表示、無ければ 0）。
   devices: [
-    { id: 'ip17pro', brand: 'iPhone',  name: 'iPhone 17 Pro 256GB', comment: 'カメラ最上位・大画面・動きがサクサク', price: 179800, image: '', pointBack: 20000 },
-    { id: 'ip17',    brand: 'iPhone',  name: 'iPhone 17 128GB',     comment: '定番。性能と値段のバランス型',           price: 129800, image: '', pointBack: 20000 },
-    { id: 'ip16e',   brand: 'iPhone',  name: 'iPhone 16e 128GB',    comment: 'iPhoneをなるべく安く持ちたい人に',       price: 104800, image: '', pointBack: 10000 },
-    { id: 'gs25',    brand: 'Android', name: 'Galaxy S25 256GB',    comment: 'Androidの上位機。カメラも画面もきれい',   price: 139800, image: '', pointBack: 0 },
-    { id: 'aq9',     brand: 'Android', name: 'AQUOS sense9',        comment: '電池が長持ち。ふつうに使うなら十分',      price: 62800,  image: '', pointBack: 0 },
-    { id: 'op13a',   brand: 'Android', name: 'OPPO Reno13 A',       comment: '安くて軽い。電話とLINE中心の人に',         price: 39800,  image: '', pointBack: 0 },
+    // ===== iPhone =====
+    { id: 'ip18promax', brand: 'iPhone', name: 'iPhone 18 Pro Max', comment: '最上位。いちばん大きい画面と最高のカメラ', image: '', pointBack: 0,
+      variants: [ { cap: '256GB', price: 288900 }, { cap: '512GB', price: 330700 }, { cap: '1TB', price: 415400 }, { cap: '2TB', price: 529800 } ] },
+    { id: 'ip18pro',    brand: 'iPhone', name: 'iPhone 18 Pro',     comment: '最新のPro。カメラも動きも最高クラス', image: '', pointBack: 0,
+      variants: [ { cap: '256GB', price: 255900 }, { cap: '512GB', price: 307600 }, { cap: '1TB', price: 391200 }, { cap: '2TB', price: 505600 } ] },
+    { id: 'ip17e',      brand: 'iPhone', name: 'iPhone 17e',        comment: '最新世代をなるべく安く。ふつうに使うなら十分', image: '', pointBack: 0,
+      variants: [ { cap: '256GB', price: 117200 }, { cap: '512GB', price: 155600 } ] },
+    { id: 'ip17promax', brand: 'iPhone', name: 'iPhone 17 Pro Max', comment: '大画面のPro。動画もゲームも快適', image: '', pointBack: 0,
+      variants: [ { cap: '256GB', price: 234800 }, { cap: '512GB', price: 276800 }, { cap: '1TB', price: 311800 }, { cap: '2TB', price: 381800 } ] },
+    { id: 'ip17pro',    brand: 'iPhone', name: 'iPhone 17 Pro',     comment: 'カメラ重視の人に。写真も動画もきれい', image: '', pointBack: 0,
+      variants: [ { cap: '256GB', price: 222900 }, { cap: '512GB', price: 274800 }, { cap: '1TB', price: 300800 } ] },
+    { id: 'ipair',      brand: 'iPhone', name: 'iPhone Air',        comment: 'いちばん薄くて軽い。持ちやすさ重視', image: '', pointBack: 0,
+      variants: [ { cap: '256GB', price: 185900 }, { cap: '512GB', price: 231800 }, { cap: '1TB', price: 277800 } ] },
+    { id: 'ip17',       brand: 'iPhone', name: 'iPhone 17',         comment: '定番。性能と値段のバランス型', image: '', pointBack: 0,
+      variants: [ { cap: '256GB', price: 159800 } ] },
+    { id: 'ip16e',      brand: 'iPhone', name: 'iPhone 16e',        comment: 'iPhoneをなるべく安く持ちたい人に', image: '', pointBack: 0,
+      variants: [ { cap: '128GB', price: 104800 } ] },
+    { id: 'ip16promax', brand: 'iPhone', name: 'iPhone 16 Pro Max', comment: '1世代前の大画面Pro。今も高性能', image: '', pointBack: 0,
+      variants: [ { cap: '256GB', price: 224800 }, { cap: '512GB', price: 260800 }, { cap: '1TB', price: 286800 } ] },
+    { id: 'ip16pro',    brand: 'iPhone', name: 'iPhone 16 Pro',     comment: '1世代前のPro。カメラがきれい', image: '', pointBack: 0,
+      variants: [ { cap: '128GB', price: 181800 }, { cap: '256GB', price: 205900 }, { cap: '512GB', price: 242800 }, { cap: '1TB', price: 278800 } ] },
+    { id: 'ip16plus',   brand: 'iPhone', name: 'iPhone 16 Plus',    comment: '大きい画面で電池も長持ち', image: '', pointBack: 0,
+      variants: [ { cap: '128GB', price: 158800 }, { cap: '256GB', price: 180800 }, { cap: '512GB', price: 218900 } ] },
+    { id: 'ip16',       brand: 'iPhone', name: 'iPhone 16',         comment: '1世代前の定番。値段を抑えたい人に', image: '', pointBack: 0,
+      variants: [ { cap: '128GB', price: 141700 } ] },
+    // ===== Android =====
+    // 出典: 各機種の公式製品ページ（https://network.mobile.rakuten.co.jp/product/smartphone/<機種>/）2026-09-19 調査。容量が公式で確認できない機種は cap を空にしている
+    // --- Google Pixel ---
+    { id: 'px11pro',  brand: 'Android', maker: 'Google Pixel', name: 'Google Pixel 11 Pro', comment: 'Googleの最上位。カメラとAI機能が強い', image: '', pointBack: 0, variants: [ { cap: '', price: 189900 } ] },
+    { id: 'px11',     brand: 'Android', maker: 'Google Pixel', name: 'Google Pixel 11',     comment: 'Googleの最新。写真がきれいで使いやすい', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 139900 } ] },
+    { id: 'px10pro',  brand: 'Android', maker: 'Google Pixel', name: 'Google Pixel 10 Pro', comment: '1世代前の上位。今も十分高性能', image: '', pointBack: 0, variants: [ { cap: '', price: 184990 } ] },
+    { id: 'px10',     brand: 'Android', maker: 'Google Pixel', name: 'Google Pixel 10',     comment: '1世代前の定番。バランス型', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 136990 } ] },
+    { id: 'px10a',    brand: 'Android', maker: 'Google Pixel', name: 'Google Pixel 10a',    comment: 'Pixelを手ごろに。ふつうに使うなら十分', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 89760 } ] },
+    // --- Galaxy ---
+    { id: 'gs26u',    brand: 'Android', maker: 'Galaxy', name: 'Galaxy S26 Ultra',   comment: '最上位。ペン付きで大画面・最高カメラ', image: '', pointBack: 0, variants: [ { cap: '', price: 219840 } ] },
+    { id: 'gs26p',    brand: 'Android', maker: 'Galaxy', name: 'Galaxy S26+',        comment: '大きい画面で電池も長持ち', image: '', pointBack: 0, variants: [ { cap: '', price: 169920 } ] },
+    { id: 'gs26',     brand: 'Android', maker: 'Galaxy', name: 'Galaxy S26',         comment: 'Galaxyの最新標準モデル', image: '', pointBack: 0, variants: [ { cap: '', price: 136800 } ] },
+    { id: 'gzfold8u', brand: 'Android', maker: 'Galaxy', name: 'Galaxy Z Fold8 Ultra', comment: '本のように開く折りたたみの最上位', image: '', pointBack: 0, variants: [ { cap: '', price: 299900 } ] },
+    { id: 'gzfold8',  brand: 'Android', maker: 'Galaxy', name: 'Galaxy Z Fold8',     comment: '開くとタブレットサイズになる折りたたみ', image: '', pointBack: 0, variants: [ { cap: '', price: 269900 } ] },
+    { id: 'gzflip8',  brand: 'Android', maker: 'Galaxy', name: 'Galaxy Z Flip8',     comment: 'パカッと閉じる折りたたみ。小さく持てる', image: '', pointBack: 0, variants: [ { cap: '', price: 199900 } ] },
+    { id: 'ga25',     brand: 'Android', maker: 'Galaxy', name: 'Galaxy A25 5G',      comment: 'いちばん安いGalaxy。電話とLINE中心の人に', image: '', pointBack: 0, variants: [ { cap: '', price: 22001 } ] },
+    // --- AQUOS ---
+    { id: 'aqr10',    brand: 'Android', maker: 'AQUOS', name: 'AQUOS R10',      comment: 'AQUOSの上位。カメラと画面がきれい', image: '', pointBack: 0, variants: [ { cap: '', price: 109990 } ] },
+    { id: 'aqs10',    brand: 'Android', maker: 'AQUOS', name: 'AQUOS sense10',  comment: '電池長持ちの定番。ふつうに使うなら十分', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 59900 } ] },
+    { id: 'aqs9',     brand: 'Android', maker: 'AQUOS', name: 'AQUOS sense9',   comment: '1世代前の定番。値段を抑えたい人に', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 55900 } ] },
+    { id: 'aqw6',     brand: 'Android', maker: 'AQUOS', name: 'AQUOS wish6',    comment: 'シンプルで丈夫。安く持ちたい人に', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 44900 } ] },
+    { id: 'aqw5',     brand: 'Android', maker: 'AQUOS', name: 'AQUOS wish5',    comment: '1世代前のシンプル機。いちばん安いAQUOS', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 31900 } ] },
+    // --- arrows ---
+    { id: 'arA2',     brand: 'Android', maker: 'arrows', name: 'arrows Alpha2', comment: '日本メーカーの高性能機。丈夫で使いやすい', image: '', pointBack: 0, variants: [ { cap: '256GB', price: 85900 } ] },
+    { id: 'arA',      brand: 'Android', maker: 'arrows', name: 'arrows Alpha',  comment: '1世代前の高性能機。容量が大きい', image: '', pointBack: 0, variants: [ { cap: '512GB', price: 69900 } ] },
+    { id: 'arWe3',    brand: 'Android', maker: 'arrows', name: 'arrows We3',    comment: '文字が大きく操作がシンプル。初めての人に', image: '', pointBack: 0, variants: [ { cap: '', price: 34980 } ] },
+    // --- OPPO ---
+    { id: 'opr15a',   brand: 'Android', maker: 'OPPO', name: 'OPPO Reno15 A', comment: '軽くて電池長持ち。値段と性能のバランス型', image: '', pointBack: 0, variants: [ { cap: '', price: 57990 } ] },
+    { id: 'opr13a',   brand: 'Android', maker: 'OPPO', name: 'OPPO Reno13 A', comment: '1世代前のバランス型。安く持ちたい人に', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 43890 } ] },
+    { id: 'opa5',     brand: 'Android', maker: 'OPPO', name: 'OPPO A5 5G',    comment: 'いちばん安いOPPO。電話とLINE中心の人に', image: '', pointBack: 0, variants: [ { cap: '', price: 22001 } ] },
+    // --- Nothing ---
+    { id: 'np3',      brand: 'Android', maker: 'Nothing', name: 'Nothing Phone (3)',      comment: '背面が光るデザイン重視の上位機', image: '', pointBack: 0, variants: [ { cap: '256GB', price: 95990 } ] },
+    { id: 'np4apro',  brand: 'Android', maker: 'Nothing', name: 'Nothing Phone (4a) Pro', comment: 'デザイン重視のミドル上位。カメラも良い', image: '', pointBack: 0, variants: [ { cap: '256GB', price: 78900 } ] },
+    { id: 'np3a',     brand: 'Android', maker: 'Nothing', name: 'Nothing Phone (3a)',     comment: 'おしゃれで手ごろ。個性を出したい人に', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 46900 } ] },
+    { id: 'np3alite', brand: 'Android', maker: 'Nothing', name: 'Nothing Phone (3a) Lite', comment: 'Nothingのいちばん安いモデル', image: '', pointBack: 0, variants: [ { cap: '', price: 35900 } ] },
+    // --- その他 ---
+    { id: 'motog37j', brand: 'Android', maker: 'motorola', name: 'moto g37j',  comment: '安くて電池長持ち。サブ機にも', image: '', pointBack: 0, variants: [ { cap: '', price: 22990 } ] },
+    { id: 'nubias2r', brand: 'Android', maker: 'ZTE', name: 'nubia S2R',       comment: 'いちばん安い価格帯。とにかく安く持ちたい人に', image: '', pointBack: 0, variants: [ { cap: '', price: 22001 } ] },
   ],
   noDeviceLabel: '製品は買わない（今のスマホを使う）',
 
@@ -321,6 +389,7 @@ const initialState = () => ({
   discounts: {},
   brand: 'none',                       // 'none' = 製品は買わない / それ以外は MASTER.devices の brand
   deviceId: null,
+  variantIdx: 0,                       // 選択中の容量（variants の添字）
   paymentId: MASTER.defaultPayment,
   options: {},
 });
@@ -332,9 +401,13 @@ const yen = (n) => Math.max(0, Math.floor(n)).toLocaleString('ja-JP') + '円';
 const find = (arr, id) => arr.find((x) => x.id === id) || null;
 const brands = [...new Set(MASTER.devices.map((d) => d.brand))];
 
+// 選択中の製品を「機種 + 容量 + 価格」の形で返す（未選択なら null）
 function selectedDevice() {
   if (state.brand === 'none') return null;
-  return find(MASTER.devices, state.deviceId);
+  const d = find(MASTER.devices, state.deviceId);
+  if (!d) return null;
+  const v = d.variants[state.variantIdx] || d.variants[0];
+  return { ...d, cap: v.cap, price: v.price };
 }
 function installment(device, paymentId) {
   const pay = find(MASTER.payments, paymentId);
@@ -423,11 +496,18 @@ function viewDevice(c) {
   const brandOpts = [`<option value="none" ${state.brand === 'none' ? 'selected' : ''}>${MASTER.noDeviceLabel}</option>`]
     .concat(brands.map((b) => `<option value="${b}" ${state.brand === b ? 'selected' : ''}>${b}</option>`)).join('');
   const models = MASTER.devices.filter((d) => d.brand === state.brand);
+  const opt = (d) => `<option value="${d.id}" ${state.deviceId === d.id ? 'selected' : ''}>${d.name}</option>`;
+  const makers = [...new Set(models.map((d) => d.maker).filter(Boolean))];
+  const modelOpts = makers.length
+    ? makers.map((m) => `<optgroup label="${m}">${models.filter((d) => d.maker === m).map(opt).join('')}</optgroup>`).join('')
+    : models.map(opt).join('');
   const modelSel = state.brand === 'none' ? '' : `
-    <div class="select" style="margin-top:10px"><select data-act="model" aria-label="機種">
-      ${models.map((d) => `<option value="${d.id}" ${state.deviceId === d.id ? 'selected' : ''}>${d.name}</option>`).join('')}
-    </select></div>`;
+    <div class="select" style="margin-top:10px"><select data-act="model" aria-label="機種">${modelOpts}</select></div>`;
   const d = c.device;
+  const base = find(MASTER.devices, state.deviceId);
+  const caps = (state.brand !== 'none' && base && base.variants.length > 1) ? `
+    <div class="label">容量</div>
+    <div class="caps">${base.variants.map((v, i) => `<button class="choice ${state.variantIdx === i ? 'on' : ''}" data-act="variant" data-id="${i}">${v.cap}<small>${yen(v.price)}</small></button>`).join('')}</div>` : '';
   const pays = MASTER.payments.map((p) => {
     let amt = '';
     if (d) amt = p.months === 0 ? yen(d.price) : `${yen(Math.floor(d.price / p.months))}/月`;
@@ -440,7 +520,7 @@ function viewDevice(c) {
     view = `
       <div class="device-view">
         <div class="img">${d.image ? `<img src="${d.image}" alt="">` : placeholderPhone(d.brand)}</div>
-        <div><div class="dn">${d.name}</div><div class="dc">${d.comment}</div>
+        <div><div class="dn">${d.name}${d.cap ? ' ' + d.cap : ''}</div><div class="dc">${d.comment}</div>
           <div class="dp">${yen(d.price)}<small>本体価格・税込</small></div></div>
       </div>
       <div class="label">お支払い方法</div>
@@ -463,6 +543,7 @@ function viewDevice(c) {
     <h2>製品</h2>
     <div class="select"><select data-act="brand" aria-label="製品の種類">${brandOpts}</select></div>
     ${modelSel}
+    ${caps}
     ${view}
     <div class="panel-total"><div class="k">製品の月々のお支払い金額</div><div class="v">${yen(c.devMonthly)}<small>/月</small></div></div>`;
 }
@@ -540,9 +621,16 @@ function handle(act, id) {
       state.brand = id;
       const first = MASTER.devices.find((d) => d.brand === id);
       state.deviceId = first ? first.id : null;
+      state.variantIdx = 0;
       break;
     }
-    case 'model':    if (find(MASTER.devices, id)) state.deviceId = id; break;
+    case 'model':    if (find(MASTER.devices, id)) { state.deviceId = id; state.variantIdx = 0; } break;
+    case 'variant': {
+      const base = find(MASTER.devices, state.deviceId);
+      const i = Number(id);
+      if (base && base.variants[i]) state.variantIdx = i;
+      break;
+    }
     default: return;
   }
   render();
