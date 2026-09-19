@@ -8,333 +8,305 @@
 <title>最強プラン診断士 かんたん見積システム</title>
 <style>
   :root {
-    --gold: #c9a84c;
-    --gold-light: #e8c14a;
-    --gold-dark: #b8942e;
-    --gold-pale: rgba(201, 168, 76, 0.12);
+    --brand: #bf0000;          /* メインカラー（選択・強調） */
+    --brand-dark: #990000;
+    --brand-pale: #fdf1f1;
+    --seg-plan: #bf0000;       /* 支払いイメージの帯: プラン */
+    --seg-opt: #e4657a;        /*                     オプション */
+    --seg-dev: #f3c2cb;        /*                     製品代金 */
     --navy: #1a2332;
-    --navy-mid: #1f3a66;
-    --bg: #f8fafc;
-    --bg2: #f1f5f9;
+    --bg: #f3f4f6;
     --surface: #ffffff;
+    --surface2: #f8fafc;
     --text: #0f172a;
     --sub: #64748b;
     --disabled: #94a3b8;
     --border: #e2e8f0;
-    --shadow-card: 0 1px 6px rgba(0, 0, 0, 0.06);
-    --shadow-glow: 0 0 20px rgba(201, 168, 76, 0.25);
-    --header-h: 80px;
-    --bar-h: 96px;
+    --shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+    --header-h: 72px;
   }
-
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
   body {
     font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
-    font-size: 16px;
-    line-height: 1.8;
-    letter-spacing: 0.02em;
-    word-break: break-all;
-    overflow-wrap: break-word;
-    line-break: strict;
-    -webkit-user-select: none;
-    user-select: none;
-    touch-action: manipulation;
-    min-height: 100vh;
+    font-size: 16px; line-height: 1.8; letter-spacing: 0.02em;
+    word-break: break-all; overflow-wrap: break-word; line-break: strict;
+    -webkit-user-select: none; user-select: none; touch-action: manipulation; min-height: 100vh;
   }
-  button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
+  button, select { font: inherit; color: inherit; touch-action: manipulation; }
+  button { cursor: pointer; }
   h1, h2, h3 { margin: 0; line-height: 1.3; letter-spacing: 0; }
 
   /* ===== ヘッダー ===== */
   .header {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-    height: var(--header-h);
-    background: var(--navy);
-    color: #fff;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: var(--header-h);
+    background: var(--surface); border-bottom: 1px solid var(--border);
     display: flex; align-items: center; justify-content: space-between;
     padding: env(safe-area-inset-top) calc(20px + env(safe-area-inset-right)) 0 calc(20px + env(safe-area-inset-left));
   }
-  .header .right { display: flex; align-items: center; gap: 16px; }
-  .header .reset-btn {
-    min-height: 44px; padding: 6px 16px; border-radius: 8px; font-size: 14px; font-weight: 600;
-    background: transparent; color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.3);
+  .logo { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .logo .mark {
+    width: 40px; height: 40px; border-radius: 10px; background: var(--brand); color: #fff;
+    font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center; flex: none;
   }
-  .header .reset-btn:active { background: rgba(255,255,255,0.1); }
-  .header .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
-  .header .brand .mark {
-    width: 40px; height: 40px; border-radius: 10px; flex: none;
-    background: var(--gold); color: #fff; font-weight: 700; font-size: 18px;
-    display: flex; align-items: center; justify-content: center;
+  .logo .name { font-weight: 800; font-size: 20px; color: var(--brand); white-space: nowrap; line-height: 1.2; }
+  .logo .name small { display: block; font-size: 12px; font-weight: 600; color: var(--sub); letter-spacing: 0.06em; }
+  .btn-reset {
+    min-height: 44px; padding: 8px 20px; border-radius: 8px; font-size: 15px; font-weight: 600;
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
   }
-  .header .brand .name { font-weight: 700; font-size: 18px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .header .brand .name small { display: block; font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.7); letter-spacing: 0.04em; }
+  .btn-reset:active { background: var(--surface2); }
 
-  .steps { display: flex; align-items: center; gap: 8px; }
-  .step { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.4); font-size: 14px; font-weight: 600; }
-  .step .num {
-    width: 32px; height: 32px; border-radius: 50%; flex: none;
-    border: 2px solid rgba(255,255,255,0.3);
-    display: flex; align-items: center; justify-content: center; font-size: 14px;
+  /* ===== タブ（雰囲気用・機能はモバイルのみ） ===== */
+  .tabs { display: flex; border-bottom: 3px solid var(--brand); margin-bottom: 20px; }
+  .tabs span {
+    flex: 1; text-align: center; padding: 12px 8px; font-weight: 700; font-size: 18px; color: var(--sub);
+    background: var(--surface); border-radius: 10px 10px 0 0;
   }
-  .step.done .num { background: var(--gold); border-color: var(--gold); color: #fff; }
-  .step.done { color: rgba(255,255,255,0.7); }
-  .step.now { color: #fff; }
-  .step.now .num { border-color: var(--gold); color: var(--gold); box-shadow: var(--shadow-glow); }
-  .step .sep { width: 24px; height: 2px; background: rgba(255,255,255,0.2); }
-  .step.done .sep { background: var(--gold); }
-  .step .label { white-space: nowrap; }
+  .tabs span.on { background: var(--brand); color: #fff; }
 
-  /* ===== メイン ===== */
+  /* ===== レイアウト ===== */
   .main {
-    max-width: 1200px; margin: 0 auto;
-    padding: calc(var(--header-h) + 24px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) calc(var(--bar-h) + 40px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
+    max-width: 1400px; margin: 0 auto;
+    padding: calc(var(--header-h) + 20px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
   }
-  .main.no-bar { padding-bottom: 40px; }
-  .screen-title { font-size: 32px; font-weight: 700; line-height: 1.3; margin-bottom: 4px; }
-  .screen-lead { color: var(--sub); font-size: 16px; margin-bottom: 24px; }
-  .section-title { font-size: 20px; font-weight: 600; margin: 40px 0 12px; display: flex; align-items: center; gap: 10px; }
-  .section-title::before { content: ''; width: 5px; height: 24px; background: var(--gold); border-radius: 2px; }
-  .hint { color: var(--sub); font-size: 16px; line-height: 1.6; }
+  .cols { display: grid; grid-template-columns: 1.1fr 1.1fr 0.9fr; gap: 20px; align-items: start; }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; box-shadow: var(--shadow); }
+  .panel h2 { font-size: 26px; font-weight: 800; margin-bottom: 16px; }
+  .label { font-size: 14px; font-weight: 700; color: var(--sub); margin: 20px 0 8px; letter-spacing: 0.04em; }
+  .label:first-of-type { margin-top: 0; }
+  .note { font-size: 14px; color: var(--sub); line-height: 1.6; }
 
-  /* カード共通 */
-  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-  .card {
-    position: relative;
-    background: var(--surface); border: 2px solid var(--border); border-radius: 12px;
-    padding: 24px; box-shadow: var(--shadow-card); text-align: left; width: 100%;
-    display: flex; flex-direction: column; gap: 8px;
-    transition: border-color 0.12s, box-shadow 0.12s, transform 0.08s;
+  /* 選択ボタン（2列） */
+  .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .choice-grid.cols3 { grid-template-columns: repeat(3, 1fr); }
+  .choice {
+    min-height: 56px; padding: 10px 12px; border-radius: 8px; border: 2px solid var(--border);
+    background: var(--surface); font-weight: 700; font-size: 16px; line-height: 1.4;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 2px;
+    transition: background 0.1s, border-color 0.1s;
   }
-  .card:active { transform: scale(0.99); }
-  .card.selected { border-color: var(--gold); box-shadow: var(--shadow-glow); background: #fffdf7; }
-  .card .check {
-    position: absolute; top: 14px; right: 14px;
-    width: 32px; height: 32px; border-radius: 50%;
-    border: 2px solid var(--border); background: #fff;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 18px; font-weight: 700;
-  }
-  .card.selected .check { background: var(--gold); border-color: var(--gold); }
-  .card .check.box { border-radius: 8px; }
-  .card .title { font-size: 20px; font-weight: 600; line-height: 1.4; padding-right: 40px; }
-  .card .desc { color: var(--sub); font-size: 16px; line-height: 1.6; }
-  .card .price { font-size: 28px; font-weight: 700; color: var(--navy); line-height: 1.2; letter-spacing: -0.01em; }
-  .card .price small { font-size: 14px; font-weight: 400; color: var(--sub); margin-left: 4px; letter-spacing: 0; }
-  .card .tag {
-    display: inline-block; align-self: flex-start;
-    background: var(--gold-pale); color: var(--gold-dark);
-    font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 999px; line-height: 1.6;
-  }
+  .choice small { font-size: 13px; font-weight: 500; color: var(--sub); line-height: 1.4; }
+  .choice .amt { font-size: 15px; font-weight: 700; }
+  .choice.on { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .choice.on small, .choice.on .amt { color: rgba(255,255,255,0.9); }
+  .choice:active { transform: scale(0.98); }
+  .choice.big { min-height: 84px; }
+  .choice.big .title { font-size: 20px; font-weight: 800; }
 
-  /* 端末 */
-  .device-img {
-    height: 140px; display: flex; align-items: center; justify-content: center;
-    background: var(--bg2); border-radius: 8px; margin-bottom: 8px;
+  /* プランボタン */
+  .plan-btn {
+    width: 100%; min-height: 72px; border-radius: 8px; border: 2px solid var(--brand); background: var(--brand); color: #fff;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 16px; text-align: center;
   }
-  .device-img img { max-height: 124px; max-width: 90%; object-fit: contain; }
-  .device-img svg { height: 110px; }
-  .device-monthly { margin-top: auto; padding-top: 8px; border-top: 1px dashed var(--border); font-size: 14px; color: var(--sub); }
-  .device-monthly b { font-size: 20px; color: var(--navy); font-weight: 700; margin-left: 4px; }
+  .plan-btn .pn { font-weight: 800; font-size: 20px; line-height: 1.3; }
+  .plan-btn .pr { font-size: 15px; font-weight: 600; opacity: 0.95; }
 
-  /* セグメント（支払回数） */
-  .seg { display: inline-flex; background: var(--bg2); border-radius: 12px; padding: 4px; gap: 4px; max-width: 100%; }
-  .seg button {
-    min-width: 96px; height: 48px; padding: 0 20px; border: 2px solid transparent; border-radius: 8px;
-    background: transparent; color: var(--sub); font-weight: 600; font-size: 16px;
+  /* データ量（3枚） */
+  .tiers { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .tier {
+    min-height: 64px; padding: 10px 14px; border-radius: 10px; border: 2px solid var(--border); background: var(--surface);
+    display: flex; flex-direction: row; align-items: center; text-align: left; gap: 12px; width: 100%;
   }
-  .seg button.on { background: var(--surface); color: var(--text); box-shadow: var(--shadow-card); border-color: var(--gold); }
+  .tier .gb { font-size: 20px; font-weight: 800; line-height: 1.3; flex: none; width: 88px; }
+  .tier .price { font-size: 18px; font-weight: 800; color: var(--brand); line-height: 1.3; flex: none; white-space: nowrap; }
+  .tier .hint { font-size: 14px; color: var(--sub); line-height: 1.5; flex: 1; }
+  .tier.on { background: var(--brand-pale); border-color: var(--brand); }
+  .tier.on .gb { color: var(--brand); }
 
-  /* トグル */
-  .toggle {
-    display: flex; align-items: center; justify-content: space-between; gap: 16px;
-    background: var(--surface); border: 2px solid var(--border); border-radius: 12px;
-    padding: 16px 20px; min-height: 72px; width: 100%; text-align: left; box-shadow: var(--shadow-card);
+  /* チェック行 */
+  .check {
+    display: flex; align-items: center; gap: 14px; width: 100%; min-height: 56px; padding: 8px 12px;
+    border: 2px solid transparent; border-radius: 8px; background: transparent; text-align: left;
   }
-  .toggle.on { border-color: var(--gold); background: #fffdf7; }
-  .toggle .t-body { min-width: 0; flex: 1; }
-  .toggle .t-name { font-weight: 600; font-size: 18px; line-height: 1.4; }
-  .toggle .t-desc { color: var(--sub); font-size: 16px; line-height: 1.6; }
-  .toggle .t-amt { font-weight: 700; color: var(--navy); white-space: nowrap; font-size: 18px; }
-  .toggle .sw {
-    flex: none; width: 56px; height: 32px; border-radius: 999px; background: #cbd5e1; position: relative; transition: background 0.15s;
+  .check:active { background: var(--surface2); }
+  .check .box {
+    flex: none; width: 28px; height: 28px; border-radius: 6px; border: 2px solid #cbd5e1; background: #fff;
+    display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 18px;
   }
-  .toggle .sw::after {
-    content: ''; position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%;
-    background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.25); transition: left 0.15s;
-  }
-  .toggle.on .sw { background: var(--gold); }
-  .toggle.on .sw::after { left: 27px; }
-  .toggle-list { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .check.on .box { background: var(--brand); border-color: var(--brand); }
+  .check .body { flex: 1; min-width: 0; }
+  .check .name { display: block; font-weight: 700; font-size: 17px; line-height: 1.4; }
+  .check .desc { display: block; font-size: 14px; color: var(--sub); line-height: 1.5; }
+  .check .price { flex: none; font-weight: 800; font-size: 17px; white-space: nowrap; }
+  .check.on .price { color: var(--brand); }
+  .check .price.minus { color: var(--sub); }
+  .check.on .price.minus { color: var(--brand); }
 
-  /* ボタン */
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    min-height: 56px; padding: 10px 28px; border-radius: 8px; font-size: 18px; font-weight: 600;
-    border: 1px solid transparent; transition: background 0.12s, box-shadow 0.12s; white-space: nowrap;
+  /* セレクト */
+  .select {
+    position: relative; width: 100%;
   }
-  .btn:active { transform: translateY(1px); }
-  .btn-primary { background: var(--gold); color: #fff; }
-  .btn-primary:active { background: var(--gold-dark); box-shadow: var(--shadow-glow); }
-  .btn-primary:disabled { background: var(--disabled); color: #fff; box-shadow: none; }
-  .btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
-  .btn-ghost:active { background: var(--bg2); }
-  .btn-xl { min-height: 72px; font-size: 22px; padding: 14px 48px; }
+  .select select {
+    width: 100%; min-height: 56px; padding: 10px 48px 10px 16px; border-radius: 8px; border: 2px solid var(--border);
+    background: var(--surface); font-size: 18px; font-weight: 700; appearance: none; -webkit-appearance: none;
+  }
+  .select::after {
+    content: ''; position: absolute; right: 18px; top: 50%; width: 10px; height: 10px; margin-top: -8px;
+    border-right: 3px solid var(--brand); border-bottom: 3px solid var(--brand); transform: rotate(45deg); pointer-events: none;
+  }
+  .select select:focus { outline: none; border-color: var(--brand); }
 
-  /* ===== スタート画面 ===== */
-  .start {
-    min-height: calc(100vh - var(--header-h) - 80px);
-    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 24px;
-  }
-  .start .eyebrow { color: var(--gold-dark); font-weight: 600; letter-spacing: 0.1em; font-size: 14px; }
-  .start h1 { font-size: 48px; line-height: 1.2; font-weight: 700; color: var(--navy); }
-  .start p { color: var(--sub); max-width: 560px; margin: 0; }
-  .start .flow { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
-  .start .flow span {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 6px 18px;
-    font-size: 14px; font-weight: 600; color: var(--sub); box-shadow: var(--shadow-card);
-  }
-  .start .flow span b { color: var(--gold-dark); margin-right: 6px; }
+  /* 製品カード */
+  .device-view { display: flex; gap: 16px; align-items: center; margin-top: 12px; padding: 14px; background: var(--surface2); border-radius: 10px; }
+  .device-view .img { flex: none; width: 88px; height: 120px; display: flex; align-items: center; justify-content: center; }
+  .device-view .img img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .device-view .img svg { height: 110px; }
+  .device-view .dn { font-weight: 800; font-size: 18px; line-height: 1.4; }
+  .device-view .dc { font-size: 14px; color: var(--sub); line-height: 1.5; }
+  .device-view .dp { font-size: 22px; font-weight: 800; color: var(--navy); line-height: 1.3; margin-top: 4px; }
+  .device-view .dp small { font-size: 13px; color: var(--sub); font-weight: 500; margin-left: 4px; }
 
-  /* ===== 結果画面 ===== */
-  .result { display: grid; gap: 24px; grid-template-columns: 1fr; }
-  @media (min-width: 900px) { .result { grid-template-columns: 1.2fr 1fr; align-items: start; } }
-  .detail { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; box-shadow: var(--shadow-card); }
-  .detail h2 { font-size: 20px; font-weight: 600; margin-bottom: 12px; }
-  .row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 10px 0; border-bottom: 1px dashed var(--border); }
-  .row:last-child { border-bottom: 0; }
-  .row .k { min-width: 0; }
-  .row .k b { font-weight: 600; display: block; line-height: 1.5; }
-  .row .k small { color: var(--sub); font-size: 14px; display: block; line-height: 1.5; }
-  .row .v { font-weight: 700; color: var(--navy); white-space: nowrap; font-size: 20px; }
-  .row .v.minus { color: var(--sub); }
-  .row.head { border-bottom: 0; padding-bottom: 0; margin-top: 12px; }
-  .row.head .k b { font-size: 14px; color: var(--sub); font-weight: 600; letter-spacing: 0.06em; }
-  .row .empty { color: var(--disabled); font-weight: 400; }
-  .total-card {
-    background: var(--surface); border: 3px solid var(--gold); border-radius: 12px; padding: 24px; text-align: center;
-    box-shadow: var(--shadow-glow); position: sticky; top: calc(var(--header-h) + 24px);
-  }
-  .total-card .lbl { color: var(--sub); font-weight: 600; font-size: 16px; }
-  .total-card .amt { font-size: 60px; font-weight: 700; color: var(--navy); line-height: 1.2; letter-spacing: -0.01em; }
-  .total-card .amt small { font-size: 24px; margin-left: 4px; }
-  .total-card .note { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); text-align: left; display: grid; gap: 8px; }
-  .total-card .note div { display: flex; justify-content: space-between; gap: 12px; }
-  .total-card .note b { color: var(--navy); white-space: nowrap; }
-  .total-card .actions { margin-top: 24px; }
+  /* 支払い内訳 */
+  .split { display: grid; grid-template-columns: 1fr 1fr; margin-top: 16px; border-top: 1px solid var(--border); }
+  .split div { padding: 12px 8px 0; text-align: center; }
+  .split div + div { border-left: 1px solid var(--border); }
+  .split .k { font-size: 13px; font-weight: 700; color: var(--sub); line-height: 1.5; }
+  .split .v { font-size: 24px; font-weight: 800; color: var(--navy); line-height: 1.3; }
+  .split .v small { font-size: 14px; font-weight: 600; }
 
-  /* ===== 下部バー ===== */
-  .bar {
-    position: fixed; left: 0; right: 0; bottom: 0; z-index: 1000;
-    background: var(--navy); color: #fff;
-    padding: 12px calc(20px + env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
-    box-shadow: 0 -4px 24px rgba(0,0,0,0.25);
-  }
-  .bar .inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .bar .total { display: flex; flex-direction: column; min-width: 0; }
-  .bar .total .lbl { font-size: 14px; color: rgba(255,255,255,0.7); font-weight: 600; line-height: 1.4; }
-  .bar .total .amt { font-size: 36px; font-weight: 700; line-height: 1.2; color: var(--gold-light); letter-spacing: -0.01em; display: inline-block; }
-  .bar .total .amt small { font-size: 16px; color: rgba(255,255,255,0.8); margin-left: 4px; font-weight: 400; }
-  .bar .total .amt.bump { animation: bump 0.25s ease-out; }
-  @keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.06); } 100% { transform: scale(1); } }
-  .bar .nav { display: flex; gap: 12px; flex: none; }
-  .bar .btn-ghost { color: #fff; border-color: rgba(255,255,255,0.3); }
-  .bar .btn-ghost:active { background: rgba(255,255,255,0.1); }
+  /* パネル下の金額 */
+  .panel-total { margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--border); text-align: center; }
+  .panel-total .k { font-size: 13px; font-weight: 700; color: var(--sub); }
+  .panel-total .v { font-size: 28px; font-weight: 800; color: var(--navy); line-height: 1.3; }
+  .panel-total .v small { font-size: 14px; font-weight: 600; }
+  .panel-total .v.range { font-size: 22px; color: var(--sub); }
 
-  /* ===== モバイル（≤767） ===== */
+  /* ===== 月々のお支払いイメージ ===== */
+  .summary {
+    position: sticky; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 900;
+    margin-top: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12); padding: 20px 24px;
+  }
+  .summary .head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .summary h2 { font-size: 26px; font-weight: 800; }
+  .summary h2 small { font-size: 13px; font-weight: 500; color: var(--sub); margin-left: 8px; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; font-weight: 600; color: var(--sub); }
+  .legend i { display: inline-block; width: 14px; height: 14px; border-radius: 3px; margin-right: 6px; vertical-align: -2px; }
+  .sum-body { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; margin-top: 16px; }
+  .bar { height: 56px; display: flex; border-radius: 8px; overflow: hidden; background: var(--surface2); border: 1px solid var(--border); }
+  .bar div { display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 14px; white-space: nowrap; overflow: hidden; min-width: 0; padding: 0 6px; }
+  .bar .s-plan { background: var(--seg-plan); }
+  .bar .s-opt { background: var(--seg-opt); }
+  .bar .s-dev { background: var(--seg-dev); color: var(--navy); }
+  .bar .s-empty { flex: 1; color: var(--disabled); font-weight: 600; }
+  .breakdown { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 12px; font-size: 15px; color: var(--sub); }
+  .breakdown b { color: var(--text); font-weight: 700; margin-left: 4px; }
+  .breakdown .minus b { color: var(--brand); }
+  .total { text-align: right; min-width: 260px; }
+  .total .k { font-size: 15px; font-weight: 700; color: var(--sub); }
+  .total .v { font-size: 56px; font-weight: 800; color: var(--brand); line-height: 1.1; letter-spacing: -0.01em; white-space: nowrap; }
+  .total .v small { font-size: 22px; margin-left: 4px; }
+  .total .v.bump { animation: bump 0.25s ease-out; }
+  @keyframes bump { 40% { transform: scale(1.05); } }
+  .total .extra { margin-top: 8px; font-size: 14px; color: var(--sub); line-height: 1.6; }
+  .total .extra b { color: var(--navy); }
+  .total .wait { font-size: 18px; font-weight: 700; color: var(--disabled); }
+
+  /* ===== レスポンシブ ===== */
+  @media (max-width: 1100px) {
+    .cols { grid-template-columns: 1fr 1fr; }
+    .cols .panel:nth-child(3) { grid-column: 1 / -1; }
+  }
   @media (max-width: 767px) {
-    :root { --header-h: 64px; }
-    .header { padding: 0 16px; }
-    .header .brand .name { display: none; }
-    .step .label { display: none; }
-    .step.now .label { display: inline; }
-    .step .sep { width: 12px; }
+    :root { --header-h: 60px; }
+    .logo .name { font-size: 17px; }
+    .logo .name small { display: none; }
     .main { padding-left: 16px; padding-right: 16px; }
-    .screen-title { font-size: 24px; }
-    .start h1 { font-size: 34px; }
-    .grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-    .card { padding: 16px; }
-    .card .price { font-size: 24px; }
-    .device-img { height: 110px; }
-    .device-img svg { height: 90px; }
-    .toggle-list { grid-template-columns: 1fr; }
-    .bar { padding-left: 16px; padding-right: 16px; }
-    .bar .total .amt { font-size: 30px; }
-    .bar .btn { padding: 10px 18px; font-size: 16px; }
-    .total-card .amt { font-size: 48px; }
-  }
-  @media (max-width: 480px) {
-    .grid { grid-template-columns: 1fr; }
+    .cols { grid-template-columns: 1fr; gap: 16px; }
+    .cols .panel:nth-child(3) { grid-column: auto; }
+    .panel { padding: 18px; }
+    .panel h2, .summary h2 { font-size: 22px; }
+    .tabs span { font-size: 15px; padding: 10px 4px; }
+    .sum-body { grid-template-columns: 1fr; }
+    .total { text-align: left; }
+    .total .v { font-size: 44px; }
   }
 </style>
 </head>
 <body>
 
 <header class="header">
-  <div class="brand">
+  <div class="logo">
     <div class="mark">診</div>
-    <div class="name">最強プラン診断士<small>かんたん見積システム</small></div>
+    <div class="name">かんたん見積システム<small>最強プラン診断士</small></div>
   </div>
-  <div class="right">
-    <nav class="steps" id="steps" aria-label="ステップ"></nav>
-    <button class="reset-btn" id="headerReset" data-act="reset" hidden>最初から</button>
-  </div>
+  <button class="btn-reset" data-act="reset">最初から</button>
 </header>
 
-<main class="main" id="app"></main>
-<footer class="bar" id="bar" hidden></footer>
+<main class="main">
+  <div class="tabs"><span class="on">モバイル</span><span>ホームルーター</span><span>光回線</span></div>
+  <div class="cols">
+    <section class="panel" id="panelPlan"></section>
+    <section class="panel" id="panelDevice"></section>
+    <section class="panel" id="panelOption"></section>
+  </div>
+  <section class="summary" id="summary"></section>
+</main>
 
 <script>
 /* =====================================================================
    ★★ マスタデータ（ここだけ直せば全画面に反映されます） ★★
    ---------------------------------------------------------------------
-   投入日: 2026-09-18
+   投入日: 2026-09-19
    注意 : 金額・機種・名称はすべて「仮の値」です。第8事業部が店頭で使う
           最新の公式価格に差し替えてください（税込で入力）。
           プラン名は楽天モバイルの正式名称を使わず、独自の名前にしています。
    ===================================================================== */
 const MASTER = {
 
+  // ---- 申込区分（金額には影響しない。店頭の画面に合わせた選択肢）----
+  contractTypes: [
+    { id: 'new',  label: '新規契約' },
+    { id: 'mnp',  label: '他社から乗り換え', sub: '（MNP）' },
+    { id: 'plan', label: 'プラン変更' },
+    { id: 'dev',  label: '機種変更' },
+  ],
+
   // ---- プラン（データ量の段階で料金が変わる1つのプラン）----
   plan: {
     name: 'ミライつながるプラン',          // ← プラン名。ここを変えれば全画面に反映
     tiers: [
-      { id: 'tier_s', label: '3GBまで',  hint: 'SNSと連絡がメインの人。動画はたまに',            price: 1078 },
-      { id: 'tier_m', label: '20GBまで', hint: '動画もよく見る人。毎日は見ない',                  price: 2178 },
-      { id: 'tier_l', label: '無制限',   hint: '動画を毎日たっぷり見る人。ゲームや通信量を気にしたくない人', price: 3278 },
+      { id: 'tier_s', label: '〜3GB',  hint: 'SNSと連絡がメイン。動画はたまに',       price: 1078 },
+      { id: 'tier_m', label: '〜20GB', hint: '動画もよく見る。毎日は見ない',           price: 2178 },
+      { id: 'tier_l', label: '無制限', hint: '動画を毎日たっぷり。通信量を気にしたくない', price: 3278 },
     ],
   },
 
-  // ---- 割引（プラン画面でトグル選択）----
+  // ---- 割引（チェックで適用）----
   discounts: [
-    { id: 'family', name: '家族まとめ割',   desc: '家族2人以上で同じ会社を使う人',   amount: 110 },
-    { id: 'youth',  name: '22歳以下わり',    desc: '契約する本人が22歳以下の人',       amount: 110 },
-    { id: 'senior', name: '65歳以上わり',    desc: '契約する本人が65歳以上の人',       amount: 110 },
+    { id: 'family', name: '家族まとめ割を適用する', desc: '家族2人以上で同じ会社を使う', amount: 110 },
+    { id: 'kids',   name: 'こども割を適用する',     desc: '契約する本人が12歳以下',       amount: 440 },
+    { id: 'youth',  name: '22歳以下割を適用する',   desc: '契約する本人が22歳以下',       amount: 110 },
+    { id: 'senior', name: '65歳以上割を適用する',   desc: '契約する本人が65歳以上',       amount: 110 },
   ],
 
-  // ---- オプション（5つ程度・複数選択可）----
+  // ---- オプション（複数選択可）----
   options: [
-    { id: 'call15',   name: '15分かけ放題',          who: '普通の電話をよくかける人に（アプリ通話は元から無料）', price: 1100 },
-    { id: 'warranty', name: 'スマホ保証（故障・紛失）', who: 'よく落とす・壊しやすい人に。修理や交換が安くなる',     price: 1100 },
-    { id: 'security', name: 'ウイルス対策',           who: '怪しいサイトやメールが心配な人に',                     price: 220 },
-    { id: 'filter',   name: 'あんしんフィルター',       who: '子どものスマホの使い方を保護者が管理したい家庭に',       price: 330 },
-    { id: 'remote',   name: '電話でスマホ操作サポート',  who: 'スマホの使い方を電話で教えてほしい人に',                price: 550 },
+    { id: 'call15',   name: '15分かけ放題',           who: '普通の電話をよくかける人に（アプリ通話は元から無料）', price: 1100 },
+    { id: 'warranty', name: 'スマホ保証（故障・紛失）',  who: 'よく落とす・壊しやすい人に',                          price: 1100 },
+    { id: 'security', name: 'ウイルス対策',            who: '怪しいサイトやメールが心配な人に',                    price: 220 },
+    { id: 'filter',   name: 'あんしんフィルター',        who: '子どものスマホの使い方を保護者が管理したい家庭に',      price: 330 },
+    { id: 'remote',   name: '電話でスマホ操作サポート',   who: 'スマホの使い方を電話で教えてほしい人に',               price: 550 },
   ],
 
-  // ---- 端末（3機種＋「買わない」）----
-  // image は同じフォルダ内の画像ファイル名（例: 'img/phone-a.png'）。空なら仮のイラストを表示。
-  // pointBack は購入時のポイント還元（月額には含めず別表示）。無ければ 0。
+  // ---- 製品（brand ごとにまとめて表示。image は同じフォルダの画像パス、空なら仮イラスト）----
+  // pointBack は購入時のポイント還元。月額には含めず別表示。無ければ 0。
   devices: [
-    { id: 'dev_hi',  name: 'ハイスペック機種（仮）', comment: 'カメラがきれい・画面が大きい・動きがサクサク', price: 139800, image: '', pointBack: 20000 },
-    { id: 'dev_mid', name: 'スタンダード機種（仮）', comment: 'ふつうに使うならこれで十分。値段と性能のバランス型', price: 44800, image: '', pointBack: 0 },
-    { id: 'dev_lo',  name: 'かんたん機種（仮）',    comment: '電話とLINEが中心の人向け。文字が大きく操作がシンプル', price: 22000, image: '', pointBack: 0 },
+    { id: 'ip17pro', brand: 'iPhone',  name: 'iPhone 17 Pro 256GB', comment: 'カメラ最上位・大画面・動きがサクサク', price: 179800, image: '', pointBack: 20000 },
+    { id: 'ip17',    brand: 'iPhone',  name: 'iPhone 17 128GB',     comment: '定番。性能と値段のバランス型',           price: 129800, image: '', pointBack: 20000 },
+    { id: 'ip16e',   brand: 'iPhone',  name: 'iPhone 16e 128GB',    comment: 'iPhoneをなるべく安く持ちたい人に',       price: 104800, image: '', pointBack: 10000 },
+    { id: 'gs25',    brand: 'Android', name: 'Galaxy S25 256GB',    comment: 'Androidの上位機。カメラも画面もきれい',   price: 139800, image: '', pointBack: 0 },
+    { id: 'aq9',     brand: 'Android', name: 'AQUOS sense9',        comment: '電池が長持ち。ふつうに使うなら十分',      price: 62800,  image: '', pointBack: 0 },
+    { id: 'op13a',   brand: 'Android', name: 'OPPO Reno13 A',       comment: '安くて軽い。電話とLINE中心の人に',         price: 39800,  image: '', pointBack: 0 },
   ],
-  noDevice: { id: 'none', name: '端末は買わない', comment: '今使っているスマホをそのまま使う（端末代 0円）' },
+  noDeviceLabel: '製品は買わない（今のスマホを使う）',
 
   // ---- 支払回数（months が 0 のものは一括）----
   payments: [
-    { id: 'lump', label: '一括', months: 0 },
-    { id: 'p24',  label: '24回', months: 24 },
-    { id: 'p48',  label: '48回', months: 48 },
+    { id: 'lump', label: '一括払い', months: 0 },
+    { id: 'p24',  label: '24回払い', months: 24 },
+    { id: 'p48',  label: '48回払い', months: 48 },
   ],
   defaultPayment: 'p48',
 };
@@ -344,27 +316,31 @@ const MASTER = {
 /* ===================== 状態（ここから下はロジック） ===================== */
 // 画面に出す文字はすべて上の MASTER（このファイル内の固定値）だけ。利用者が文字を入力する欄は無い。
 const initialState = () => ({
-  screen: 0,                         // 0:スタート 1:端末 2:プラン 3:オプション 4:結果
-  deviceId: null,                    // 端末ID / 'none' / null(未選択)
-  paymentId: MASTER.defaultPayment,
+  contractId: MASTER.contractTypes[0].id,
   tierId: null,
-  discounts: {},                     // { family: true, ... }
-  options: {},                       // { call15: true, ... }
+  discounts: {},
+  brand: 'none',                       // 'none' = 製品は買わない / それ以外は MASTER.devices の brand
+  deviceId: null,
+  paymentId: MASTER.defaultPayment,
+  options: {},
 });
 let state = initialState();
 let lastTotal = null;
+let navLockUntil = 0;
 
-const yen = (n) => '¥' + Math.max(0, Math.floor(n)).toLocaleString('ja-JP');
+const yen = (n) => Math.max(0, Math.floor(n)).toLocaleString('ja-JP') + '円';
 const find = (arr, id) => arr.find((x) => x.id === id) || null;
+const brands = [...new Set(MASTER.devices.map((d) => d.brand))];
 
 function selectedDevice() {
-  if (state.deviceId === 'none') return MASTER.noDevice;
+  if (state.brand === 'none') return null;
   return find(MASTER.devices, state.deviceId);
 }
-function deviceMonthly(device, paymentId) {
+function installment(device, paymentId) {
   const pay = find(MASTER.payments, paymentId);
-  if (!device || device.id === 'none' || !pay || pay.months === 0) return 0;
-  return Math.floor(device.price / pay.months);
+  if (!device || !pay || pay.months === 0) return { monthly: 0, last: 0, months: 0 };
+  const monthly = Math.floor(device.price / pay.months);
+  return { monthly, last: device.price - monthly * (pay.months - 1), months: pay.months };
 }
 
 // 8章の計算式: プラン ＋ オプション ＋ 端末分割 － 割引 ＝ 月額合計（0円未満は0円）
@@ -374,69 +350,32 @@ function calc() {
   const opts = MASTER.options.filter((o) => state.options[o.id]);
   const optTotal = opts.reduce((s, o) => s + o.price, 0);
   const device = selectedDevice();
-  const devMonthly = deviceMonthly(device, state.paymentId);
+  const inst = installment(device, state.paymentId);
   const discs = MASTER.discounts.filter((d) => state.discounts[d.id]);
   const discTotal = discs.reduce((s, d) => s + d.amount, 0);
-  const raw = planPrice + optTotal + devMonthly - discTotal;
-  const isLump = state.paymentId === 'lump' && device && device.id !== 'none';
+  const isLump = !!device && state.paymentId === 'lump';
   return {
-    tier, planPrice, opts, optTotal, device, devMonthly, discs, discTotal,
-    total: Math.max(0, Math.floor(raw)),
+    tier, planPrice, opts, optTotal, device, devMonthly: inst.monthly, inst, discs, discTotal,
+    planAfterDiscount: Math.max(0, planPrice - discTotal),
+    total: Math.max(0, planPrice + optTotal + inst.monthly - discTotal),
     initialPayment: isLump ? device.price : 0,
     pointBack: device && device.pointBack ? device.pointBack : 0,
   };
 }
 
 /* ===================== 描画 ===================== */
-const app = document.getElementById('app');
-const bar = document.getElementById('bar');
-const stepsEl = document.getElementById('steps');
+const el = (id) => document.getElementById(id);
 
 function render() {
   const c = calc();
-  const prevScreen = app.dataset.screen;
-  renderSteps();
-  app.classList.toggle('no-bar', state.screen === 0);
-  switch (state.screen) {
-    case 0: app.innerHTML = viewStart(); break;
-    case 1: app.innerHTML = viewDevice(c); break;
-    case 2: app.innerHTML = viewPlan(c); break;
-    case 3: app.innerHTML = viewOptions(c); break;
-    default: app.innerHTML = viewResult(c); break;
-  }
-  renderBar(c);
-  app.dataset.screen = String(state.screen);
-  if (prevScreen !== String(state.screen)) window.scrollTo(0, 0);   // 画面が変わった時だけ先頭へ
+  el('panelPlan').innerHTML = viewPlan(c);
+  el('panelDevice').innerHTML = viewDevice(c);
+  el('panelOption').innerHTML = viewOptions(c);
+  el('summary').innerHTML = viewSummary(c);
 }
 
-function renderSteps() {
-  // 途中で体験者が離れても、スタッフがすぐ初期化できるようヘッダーにも「最初から」を常設（S1〜S3）
-  document.getElementById('headerReset').hidden = state.screen === 0 || state.screen === 4;
-  if (state.screen === 0) { stepsEl.innerHTML = ''; return; }
-  const names = ['端末', 'プラン', 'オプション', '結果'];
-  stepsEl.innerHTML = names.map((n, i) => {
-    const s = i + 1;
-    const cls = s < state.screen ? 'done' : s === state.screen ? 'now' : '';
-    return `<div class="step ${cls}">${i > 0 ? '<span class="sep"></span>' : ''}<span class="num">${s < state.screen ? '✓' : s}</span><span class="label">${n}</span></div>`;
-  }).join('');
-}
-
-function viewStart() {
-  return `
-    <section class="start">
-      <div class="eyebrow">JOB DRAFT FES 2026 / おしごと体験</div>
-      <h1>最強プラン診断士<br>かんたん見積システム</h1>
-      <p>お客様カードを読んで、その人にぴったりの組み合わせを作ろう。<br>選ぶたびに月額がリアルタイムで変わります。</p>
-      <div class="flow">
-        <span><b>1</b>端末をえらぶ</span><span><b>2</b>プランをえらぶ</span><span><b>3</b>オプションをえらぶ</span><span><b>4</b>見積結果</span>
-      </div>
-      <button class="btn btn-primary btn-xl" data-act="start">診断をはじめる</button>
-    </section>`;
-}
-
-function placeholderPhone(i) {
-  const tones = ['#1f3a66', '#c9a84c', '#64748b'];
-  const col = tones[i % tones.length];
+function placeholderPhone(brand) {
+  const col = brand === 'iPhone' ? '#1f3a66' : '#334155';
   return `<svg viewBox="0 0 60 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <rect x="4" y="2" width="52" height="106" rx="10" fill="${col}"/>
     <rect x="9" y="12" width="42" height="86" rx="5" fill="#f8fafc"/>
@@ -444,177 +383,180 @@ function placeholderPhone(i) {
   </svg>`;
 }
 
-function viewDevice(c) {
-  const pay = find(MASTER.payments, state.paymentId);
-  const monthlyText = (d) => {
-    if (!pay || pay.months === 0) return `一括払い<b>${yen(d.price)}</b>`;
-    return `月々<b>${yen(Math.floor(d.price / pay.months))}</b><span style="margin-left:4px">× ${pay.months}回</span>`;
-  };
-  const cards = MASTER.devices.map((d, i) => `
-    <button class="card ${state.deviceId === d.id ? 'selected' : ''}" data-act="device" data-id="${d.id}">
-      <span class="check">${state.deviceId === d.id ? '✓' : ''}</span>
-      <div class="device-img">${d.image ? `<img src="${d.image}" alt="">` : placeholderPhone(i)}</div>
-      <div class="title">${d.name}</div>
-      <div class="desc">${d.comment}</div>
-      <div class="price">${yen(d.price)}<small>本体価格・税込</small></div>
-      <div class="device-monthly">${monthlyText(d)}</div>
-    </button>`).join('');
-  const none = MASTER.noDevice;
-  return `
-    <h2 class="screen-title">STEP 1　端末をえらぶ</h2>
-    <p class="screen-lead">お客様が使うスマホを1つ選んでください。今のスマホをそのまま使う場合は「端末は買わない」を選びます。</p>
-
-    <h3 class="section-title">支払回数</h3>
-    <div class="seg" role="group" aria-label="支払回数">
-      ${MASTER.payments.map((p) => `<button class="${state.paymentId === p.id ? 'on' : ''}" data-act="payment" data-id="${p.id}">${p.label}</button>`).join('')}
-    </div>
-    <p class="hint">分割にすると本体価格を回数で割った金額が毎月の支払いに足されます。一括は初回にまとめて支払います。</p>
-
-    <h3 class="section-title">機種</h3>
-    <div class="grid">
-      ${cards}
-      <button class="card ${state.deviceId === 'none' ? 'selected' : ''}" data-act="device" data-id="none">
-        <span class="check">${state.deviceId === 'none' ? '✓' : ''}</span>
-        <div class="device-img"><svg viewBox="0 0 60 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="2" width="52" height="106" rx="10" fill="none" stroke="#94a3b8" stroke-width="3" stroke-dasharray="6 5"/></svg></div>
-        <div class="title">${none.name}</div>
-        <div class="desc">${none.comment}</div>
-        <div class="price">${yen(0)}<small>端末代</small></div>
-        <div class="device-monthly">月々<b>${yen(0)}</b></div>
-      </button>
-    </div>`;
-}
-
 function viewPlan(c) {
-  const tiers = MASTER.plan.tiers.map((t) => `
-    <button class="card ${state.tierId === t.id ? 'selected' : ''}" data-act="tier" data-id="${t.id}">
-      <span class="check">${state.tierId === t.id ? '✓' : ''}</span>
-      <span class="tag">${MASTER.plan.name}</span>
-      <div class="title">${t.label}</div>
-      <div class="desc">${t.hint}</div>
-      <div class="price">${yen(t.price)}<small>/月・税込</small></div>
+  const p = MASTER.plan;
+  const min = Math.min(...p.tiers.map((t) => t.price));
+  const max = Math.max(...p.tiers.map((t) => t.price));
+  const contract = MASTER.contractTypes.map((t) => `
+    <button class="choice ${state.contractId === t.id ? 'on' : ''}" data-act="contract" data-id="${t.id}">
+      ${t.label}${t.sub ? `<small>${t.sub}</small>` : ''}
+    </button>`).join('');
+  const tiers = p.tiers.map((t) => `
+    <button class="tier ${state.tierId === t.id ? 'on' : ''}" data-act="tier" data-id="${t.id}">
+      <span class="gb">${t.label}</span>
+      <span class="price">${yen(t.price)}<span style="font-size:12px;font-weight:600">/月</span></span>
+      <span class="hint">${t.hint}</span>
     </button>`).join('');
   const discs = MASTER.discounts.map((d) => `
-    <button class="toggle ${state.discounts[d.id] ? 'on' : ''}" data-act="discount" data-id="${d.id}" aria-pressed="${!!state.discounts[d.id]}">
-      <div class="t-body"><div class="t-name">${d.name}</div><div class="t-desc">${d.desc}</div></div>
-      <div class="t-amt">−${d.amount.toLocaleString('ja-JP')}円/月</div>
-      <span class="sw"></span>
+    <button class="check ${state.discounts[d.id] ? 'on' : ''}" data-act="discount" data-id="${d.id}" aria-pressed="${!!state.discounts[d.id]}">
+      <span class="box">${state.discounts[d.id] ? '✓' : ''}</span>
+      <span class="body"><span class="name">${d.name}</span><span class="desc">${d.desc}</span></span>
+      <span class="price minus">−${yen(d.amount)}</span>
     </button>`).join('');
+  const totalRow = c.tier
+    ? `<div class="v">${yen(c.planAfterDiscount)}<small>/月</small></div>${c.discTotal ? `<div class="note">${p.name} ${yen(c.planPrice)} − 割引 ${yen(c.discTotal)}</div>` : ''}`
+    : `<div class="v range">${yen(min)}〜${yen(max)}</div><div class="note">毎月のデータ量を選ぶと金額が決まります</div>`;
   return `
-    <h2 class="screen-title">STEP 2　プランをえらぶ</h2>
-    <p class="screen-lead">「${MASTER.plan.name}」は、1か月に使うデータ量で料金が決まります。お客様は1か月にどれくらい使いそう？</p>
+    <h2>料金プラン</h2>
+    <div class="label">申込区分</div>
+    <div class="choice-grid">${contract}</div>
+    <div class="label">料金プラン</div>
+    <button class="plan-btn" data-act="none"><span class="pn">${p.name}</span><span class="pr">${yen(min)}〜${yen(max)}/月（税込）</span></button>
+    <div class="label">毎月どれくらい使う？（データ量）</div>
+    <div class="tiers">${tiers}</div>
+    <div class="label">割引</div>
+    <div>${discs}</div>
+    <div class="panel-total"><div class="k">プランの月々のお支払い金額</div>${totalRow}</div>`;
+}
 
-    <h3 class="section-title">1か月に使うデータ量</h3>
-    <div class="grid">${tiers}</div>
-
-    <h3 class="section-title">割引プログラム</h3>
-    <p class="hint" style="margin-bottom:12px">お客様カードを見て、あてはまるものをオンにしてください。</p>
-    <div class="toggle-list">${discs}</div>`;
+function viewDevice(c) {
+  const brandOpts = [`<option value="none" ${state.brand === 'none' ? 'selected' : ''}>${MASTER.noDeviceLabel}</option>`]
+    .concat(brands.map((b) => `<option value="${b}" ${state.brand === b ? 'selected' : ''}>${b}</option>`)).join('');
+  const models = MASTER.devices.filter((d) => d.brand === state.brand);
+  const modelSel = state.brand === 'none' ? '' : `
+    <div class="select" style="margin-top:10px"><select data-act="model" aria-label="機種">
+      ${models.map((d) => `<option value="${d.id}" ${state.deviceId === d.id ? 'selected' : ''}>${d.name}</option>`).join('')}
+    </select></div>`;
+  const d = c.device;
+  const pays = MASTER.payments.map((p) => {
+    let amt = '';
+    if (d) amt = p.months === 0 ? yen(d.price) : `${yen(Math.floor(d.price / p.months))}/月`;
+    return `<button class="choice big ${state.paymentId === p.id ? 'on' : ''}" data-act="payment" data-id="${p.id}" ${d ? '' : 'disabled style="opacity:.5"'}>
+      <span class="title">${p.label}</span>${amt ? `<span class="amt">${amt}</span>` : ''}
+    </button>`;
+  }).join('');
+  let view = '';
+  if (d) {
+    view = `
+      <div class="device-view">
+        <div class="img">${d.image ? `<img src="${d.image}" alt="">` : placeholderPhone(d.brand)}</div>
+        <div><div class="dn">${d.name}</div><div class="dc">${d.comment}</div>
+          <div class="dp">${yen(d.price)}<small>本体価格・税込</small></div></div>
+      </div>
+      <div class="label">お支払い方法</div>
+      <div class="choice-grid cols3">${pays}</div>`;
+    if (c.inst.months) {
+      view += `<div class="split">
+        <div><div class="k">1〜${c.inst.months - 1}回目のお支払い金額</div><div class="v">${yen(c.inst.monthly)}</div></div>
+        <div><div class="k">${c.inst.months}回目のお支払い金額</div><div class="v">${yen(c.inst.last)}</div></div>
+      </div>`;
+    } else {
+      view += `<div class="split"><div><div class="k">初回のお支払い金額（一括）</div><div class="v">${yen(d.price)}</div></div>
+        <div><div class="k">月々の製品代金</div><div class="v">0円</div></div></div>`;
+    }
+    if (d.pointBack) view += `<p class="note" style="margin:12px 0 0">別途 <b>${d.pointBack.toLocaleString('ja-JP')}ポイント</b> 還元（月額には含めていません）</p>`;
+  } else {
+    view = `<div class="device-view"><div class="img"><svg viewBox="0 0 60 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="2" width="52" height="106" rx="10" fill="none" stroke="#94a3b8" stroke-width="3" stroke-dasharray="6 5"/></svg></div>
+      <div><div class="dn">今のスマホをそのまま使う</div><div class="dc">製品代金は 0円。買う場合は上のメニューから iPhone または Android を選んでください</div></div></div>`;
+  }
+  return `
+    <h2>製品</h2>
+    <div class="select"><select data-act="brand" aria-label="製品の種類">${brandOpts}</select></div>
+    ${modelSel}
+    ${view}
+    <div class="panel-total"><div class="k">製品の月々のお支払い金額</div><div class="v">${yen(c.devMonthly)}<small>/月</small></div></div>`;
 }
 
 function viewOptions(c) {
   const opts = MASTER.options.map((o) => `
-    <button class="card ${state.options[o.id] ? 'selected' : ''}" data-act="option" data-id="${o.id}" aria-pressed="${!!state.options[o.id]}">
-      <span class="check box">${state.options[o.id] ? '✓' : ''}</span>
-      <div class="title">${o.name}</div>
-      <div class="desc">${o.who}</div>
-      <div class="price">${yen(o.price)}<small>/月・税込</small></div>
+    <button class="check ${state.options[o.id] ? 'on' : ''}" data-act="option" data-id="${o.id}" aria-pressed="${!!state.options[o.id]}">
+      <span class="box">${state.options[o.id] ? '✓' : ''}</span>
+      <span class="body"><span class="name">${o.name}</span><span class="desc">${o.who}</span></span>
+      <span class="price">${yen(o.price)}</span>
     </button>`).join('');
   return `
-    <h2 class="screen-title">STEP 3　オプションをえらぶ</h2>
-    <p class="screen-lead">必要なものだけチェックしてください。なくても大丈夫です（複数OK）。</p>
-    <div class="grid" style="margin-top:24px">${opts}</div>`;
+    <h2>オプション</h2>
+    <p class="note" style="margin:0 0 8px">必要なものだけチェック。なくても大丈夫（複数OK）</p>
+    <div>${opts}</div>
+    <div class="panel-total"><div class="k">オプションの月々のお支払い金額</div><div class="v">${yen(c.optTotal)}<small>/月</small></div></div>`;
 }
 
-function viewResult(c) {
-  const pay = find(MASTER.payments, state.paymentId);
-  const devRow = (() => {
-    if (!c.device) return `<div class="row"><div class="k"><b>端末</b><small class="empty">未選択</small></div><div class="v">${yen(0)}</div></div>`;
-    if (c.device.id === 'none') return `<div class="row"><div class="k"><b>${c.device.name}</b><small>今のスマホを使う</small></div><div class="v">${yen(0)}</div></div>`;
-    const sub = pay.months === 0 ? `一括払い（初回 ${yen(c.device.price)}）` : `${yen(c.device.price)} ÷ ${pay.months}回`;
-    return `<div class="row"><div class="k"><b>${c.device.name}</b><small>${sub}</small></div><div class="v">${yen(c.devMonthly)}</div></div>`;
-  })();
-  const optRows = c.opts.length
-    ? c.opts.map((o) => `<div class="row"><div class="k"><b>${o.name}</b></div><div class="v">${yen(o.price)}</div></div>`).join('')
-    : `<div class="row"><div class="k"><b class="empty">オプションなし</b></div><div class="v">${yen(0)}</div></div>`;
-  const discRows = c.discs.length
-    ? c.discs.map((d) => `<div class="row"><div class="k"><b>${d.name}</b></div><div class="v minus">−${yen(d.amount)}</div></div>`).join('')
-    : `<div class="row"><div class="k"><b class="empty">割引なし</b></div><div class="v minus">−${yen(0)}</div></div>`;
-  const notes = [];
-  if (c.initialPayment > 0) notes.push(`<div><span>初回のお支払い（端末一括）</span><b>${yen(c.initialPayment)}</b></div>`);
-  if (c.pointBack > 0) notes.push(`<div><span>別途 ポイント還元</span><b>${c.pointBack.toLocaleString('ja-JP')}ポイント</b></div>`);
-  return `
-    <h2 class="screen-title">見積結果</h2>
-    <p class="screen-lead">お客様に見せながら、選んだ理由を説明してみよう。</p>
-    <div class="result">
-      <div class="detail">
-        <h2>内訳（すべて税込）</h2>
-        <div class="row head"><div class="k"><b>プラン料金</b></div></div>
-        <div class="row"><div class="k"><b>${MASTER.plan.name}</b><small>${c.tier ? c.tier.label : '<span class="empty">未選択</span>'}</small></div><div class="v">${yen(c.planPrice)}</div></div>
-        <div class="row head"><div class="k"><b>＋ オプション</b></div></div>
-        ${optRows}
-        <div class="row head"><div class="k"><b>＋ 端末の月々支払い</b></div></div>
-        ${devRow}
-        <div class="row head"><div class="k"><b>－ 割引</b></div></div>
-        ${discRows}
-      </div>
-      <div class="total-card">
-        <div class="lbl">月々のお支払い目安</div>
-        <div class="amt">${yen(c.total)}<small>/月</small></div>
-        ${notes.length ? `<div class="note">${notes.join('')}</div>` : ''}
-        <div class="actions"><button class="btn btn-primary btn-xl" data-act="reset">最初から</button></div>
-      </div>
-    </div>`;
-}
-
-function renderBar(c) {
-  if (state.screen === 0) { bar.hidden = true; return; }
-  bar.hidden = false;
-  const canNext = state.screen === 1 ? state.deviceId !== null
-                : state.screen === 2 ? state.tierId !== null
-                : true;
-  const nextLabel = state.screen === 3 ? '見積結果を見る' : 'つぎへ';
-  const nav = state.screen === 4
-    ? `<button class="btn btn-ghost" data-act="back">もどる</button><button class="btn btn-primary" data-act="reset">最初から</button>`
-    : `<button class="btn btn-ghost" data-act="back">もどる</button><button class="btn btn-primary" data-act="next" ${canNext ? '' : 'disabled'}>${nextLabel}</button>`;
+function viewSummary(c) {
+  const parts = [
+    { cls: 's-plan', v: c.planAfterDiscount, label: 'プラン' },
+    { cls: 's-opt',  v: c.optTotal,          label: 'オプション' },
+    { cls: 's-dev',  v: c.devMonthly,        label: '製品代金' },
+  ].filter((p) => p.v > 0);
+  const sum = parts.reduce((s, p) => s + p.v, 0);
+  const bar = parts.length
+    ? parts.map((p) => `<div class="${p.cls}" style="flex:${p.v} 1 0" title="${p.label}">${p.v / sum > 0.22 ? `${p.label} ${yen(p.v)}` : ''}</div>`).join('')
+    : `<div class="s-empty">左の「毎月どれくらい使う？」から選ぶと、ここに帯が出ます</div>`;
   const bump = lastTotal !== null && lastTotal !== c.total ? 'bump' : '';
   lastTotal = c.total;
-  bar.innerHTML = `
-    <div class="inner">
-      <div class="total" aria-live="polite"><span class="lbl">いまの月額合計</span><span class="amt ${bump}">${yen(c.total)}<small>/月</small></span></div>
-      <div class="nav">${nav}</div>
+  const extras = [];
+  if (c.initialPayment) extras.push(`初回のお支払い（製品一括）<b>${yen(c.initialPayment)}</b>`);
+  if (c.pointBack) extras.push(`別途 <b>${c.pointBack.toLocaleString('ja-JP')}ポイント</b> 還元`);
+  const totalHtml = c.tier
+    ? `<div class="v ${bump}">${yen(c.total)}<small>/月</small></div>`
+    : `<div class="wait">データ量を選ぶと月額が出ます</div>`;
+  return `
+    <div class="head">
+      <h2>月々のお支払いイメージ<small>※通話料等別途費用</small></h2>
+      <div class="legend"><span><i style="background:var(--seg-plan)"></i>プラン</span><span><i style="background:var(--seg-opt)"></i>オプション</span><span><i style="background:var(--seg-dev)"></i>製品代金</span></div>
+    </div>
+    <div class="sum-body">
+      <div>
+        <div class="bar">${bar}</div>
+        <div class="breakdown">
+          <span>プラン<b>${yen(c.planPrice)}</b></span>
+          <span>オプション<b>${yen(c.optTotal)}</b></span>
+          <span>製品代金<b>${yen(c.devMonthly)}</b></span>
+          <span class="minus">割引<b>−${yen(c.discTotal)}</b></span>
+        </div>
+      </div>
+      <div class="total" aria-live="polite">
+        <div class="k">月々のお支払い金額（税込）</div>
+        ${totalHtml}
+        ${extras.length ? `<div class="extra">${extras.join('<br>')}</div>` : ''}
+      </div>
     </div>`;
 }
 
 /* ===================== 操作 ===================== */
-// 画面遷移だけは連打を防ぐ（1回目の描画直後に同じ位置の別ボタンへ2回目が当たるのを防止）。選択操作は即時。
-const NAV_ACTS = new Set(['start', 'next', 'back', 'reset']);
-let navLockUntil = 0;
-
 function handle(act, id) {
-  if (NAV_ACTS.has(act)) {
-    const now = Date.now();
-    if (now < navLockUntil) return;
-    navLockUntil = now + 400;
-  }
   switch (act) {
-    case 'start':    state.screen = 1; break;
-    case 'next':     if (state.screen < 4) state.screen += 1; break;
-    case 'back':     state.screen = Math.max(0, state.screen - 1); break;
-    case 'reset':    state = initialState(); lastTotal = null; break;
-    case 'device':   state.deviceId = id; break;
-    case 'payment':  if (find(MASTER.payments, id)) state.paymentId = id; break;
+    case 'reset': {
+      const now = Date.now();
+      if (now < navLockUntil) return;
+      navLockUntil = now + 400;
+      state = initialState(); lastTotal = null; window.scrollTo(0, 0); break;
+    }
+    case 'contract': state.contractId = id; break;
     case 'tier':     state.tierId = id; break;
     case 'discount': state.discounts = { ...state.discounts, [id]: !state.discounts[id] }; break;
     case 'option':   state.options = { ...state.options, [id]: !state.options[id] }; break;
+    case 'payment':  if (find(MASTER.payments, id)) state.paymentId = id; break;
+    case 'brand': {
+      state.brand = id;
+      const first = MASTER.devices.find((d) => d.brand === id);
+      state.deviceId = first ? first.id : null;
+      break;
+    }
+    case 'model':    if (find(MASTER.devices, id)) state.deviceId = id; break;
     default: return;
   }
   render();
 }
 
 document.addEventListener('click', (e) => {
-  const el = e.target.closest('[data-act]');
-  if (!el || el.disabled) return;
-  handle(el.dataset.act, el.dataset.id);
+  const t = e.target.closest('button[data-act]');
+  if (!t || t.disabled) return;
+  handle(t.dataset.act, t.dataset.id);
+});
+document.addEventListener('change', (e) => {
+  const t = e.target.closest('select[data-act]');
+  if (!t) return;
+  handle(t.dataset.act, t.value);
 });
 
 // オフライン対応: Webで開いたときだけ Service Worker（sw.js）を登録する。
