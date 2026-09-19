@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>最強プラン診断士 かんたん見積システム</title>
+<title>かんたん見積システム｜プラン診断士 おしごと体験</title>
 <style>
   :root {
     /* PLACZ デザインルール（ライトテーマ）: ネイビー × ゴールド */
@@ -57,14 +57,6 @@
     background: var(--surface); color: var(--text); border: 1px solid var(--border);
   }
   .btn-reset:active { background: var(--surface2); }
-
-  /* ===== タブ（雰囲気用・機能はモバイルのみ） ===== */
-  .tabs { display: flex; border-bottom: 3px solid var(--navy); margin-bottom: 20px; }
-  .tabs span {
-    flex: 1; text-align: center; padding: 12px 8px; font-weight: 700; font-size: 18px; color: var(--sub);
-    background: var(--surface); border-radius: 10px 10px 0 0;
-  }
-  .tabs span.on { background: var(--navy); color: #fff; }
 
   /* ===== レイアウト ===== */
   .main {
@@ -224,7 +216,6 @@
     .cols .panel:nth-child(3) { grid-column: auto; }
     .panel { padding: 18px; }
     .panel h2, .summary h2 { font-size: 22px; }
-    .tabs span { font-size: 15px; padding: 10px 4px; }
     .sum-body { grid-template-columns: 1fr; }
     .total { text-align: left; }
     .total .v { font-size: 44px; }
@@ -236,13 +227,12 @@
 <header class="header">
   <div class="logo">
     <div class="mark">診</div>
-    <div class="name">かんたん見積システム<small>最強プラン診断士</small></div>
+    <div class="name">かんたん見積システム<small>プラン診断士 おしごと体験</small></div>
   </div>
   <button class="btn-reset" data-act="reset">最初から</button>
 </header>
 
 <main class="main">
-  <div class="tabs"><span class="on">モバイル</span><span>ホームルーター</span><span>光回線</span></div>
   <div class="cols">
     <section class="panel" id="panelPlan"></section>
     <section class="panel" id="panelDevice"></section>
