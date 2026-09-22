@@ -245,21 +245,12 @@
 /* =====================================================================
    ★★ マスタデータ（ここだけ直せば全画面に反映されます） ★★
    ---------------------------------------------------------------------
-   投入日: 2026-09-19
-   注意 : 製品（devices）は楽天モバイル公式サイトの製品価格を 2026-09-19 に調査して投入（出典は devices の上に記載）。
-          それ以外（プラン・割引・オプション）の金額と名称は「仮の値」です。第8事業部が店頭で使う
-          最新の公式価格に差し替えてください（税込で入力）。
-          プラン名は楽天モバイルの正式名称を使わず、独自の名前にしています。
+   投入日: 2026-09-22
+   注意 : 金額と名称はすべて「仮の値（体験用のサンプル）」です。店頭で使う最新の公式価格に
+          差し替えてから使ってください（税込の整数で入力）。
+          製品は「製品は買わない／iPhone／Android」の3択。プラン名は独自の名前にしています。
    ===================================================================== */
 const MASTER = {
-
-  // ---- 申込区分（金額には影響しない。店頭の画面に合わせた選択肢）----
-  contractTypes: [
-    { id: 'new',  label: '新規契約' },
-    { id: 'mnp',  label: '他社から乗り換え', sub: '（MNP）' },
-    { id: 'plan', label: 'プラン変更' },
-    { id: 'dev',  label: '機種変更' },
-  ],
 
   // ---- プラン（データ量の段階で料金が変わる1つのプラン）----
   plan: {
@@ -271,14 +262,6 @@ const MASTER = {
     ],
   },
 
-  // ---- 割引（チェックで適用）----
-  discounts: [
-    { id: 'family', name: '家族まとめ割を適用する', desc: '家族2人以上で同じ会社を使う', amount: 110 },
-    { id: 'kids',   name: 'こども割を適用する',     desc: '契約する本人が12歳以下',       amount: 440 },
-    { id: 'youth',  name: '22歳以下割を適用する',   desc: '契約する本人が22歳以下',       amount: 110 },
-    { id: 'senior', name: '65歳以上割を適用する',   desc: '契約する本人が65歳以上',       amount: 110 },
-  ],
-
   // ---- オプション（複数選択可）----
   options: [
     { id: 'call15',   name: '15分かけ放題',           who: '普通の電話をよくかける人に（アプリ通話は元から無料）', price: 1100 },
@@ -288,75 +271,14 @@ const MASTER = {
     { id: 'remote',   name: '電話でスマホ操作サポート',   who: 'スマホの使い方を電話で教えてほしい人に',               price: 550 },
   ],
 
-  // ---- 製品（brand → 機種 → 容量 の順に選ぶ）----
-  // 出典: 楽天モバイル公式 製品ページ／iPhone価格一覧（価格基準日 2026-09-14、税込・キャンペーン前の製品価格）
-  //       https://network.mobile.rakuten.co.jp/product/iphone/fee/  https://network.mobile.rakuten.co.jp/product/smartphone/
-  // 調査日 2026-09-19。公式で確認できた容量だけを入れている（未確認の容量は入れていない）。
-  // image は同じフォルダの画像パス（空なら仮イラスト）。pointBack は購入時のポイント還元（月額には含めず別表示、無ければ 0）。
+  // ---- 製品（「製品は買わない」／iPhone／Android の3択）----
+  // 体験用のダミーデータ。機種を増やしたい場合はここに行を足す（brand は 'iPhone' か 'Android'）。
+  // variants を2つ以上入れると容量の選択ボタンが、同じ brand に2機種以上入れると機種のプルダウンが出る。
   devices: [
-    // ===== iPhone =====
-    { id: 'ip18promax', brand: 'iPhone', name: 'iPhone 18 Pro Max', comment: '最上位。いちばん大きい画面と最高のカメラ', image: '', pointBack: 0,
-      variants: [ { cap: '256GB', price: 288900 }, { cap: '512GB', price: 330700 }, { cap: '1TB', price: 415400 }, { cap: '2TB', price: 529800 } ] },
-    { id: 'ip18pro',    brand: 'iPhone', name: 'iPhone 18 Pro',     comment: '最新のPro。カメラも動きも最高クラス', image: '', pointBack: 0,
-      variants: [ { cap: '256GB', price: 255900 }, { cap: '512GB', price: 307600 }, { cap: '1TB', price: 391200 }, { cap: '2TB', price: 505600 } ] },
-    { id: 'ip17e',      brand: 'iPhone', name: 'iPhone 17e',        comment: '最新世代をなるべく安く。ふつうに使うなら十分', image: '', pointBack: 0,
-      variants: [ { cap: '256GB', price: 117200 }, { cap: '512GB', price: 155600 } ] },
-    { id: 'ip17promax', brand: 'iPhone', name: 'iPhone 17 Pro Max', comment: '大画面のPro。動画もゲームも快適', image: '', pointBack: 0,
-      variants: [ { cap: '256GB', price: 234800 }, { cap: '512GB', price: 276800 }, { cap: '1TB', price: 311800 }, { cap: '2TB', price: 381800 } ] },
-    { id: 'ip17pro',    brand: 'iPhone', name: 'iPhone 17 Pro',     comment: 'カメラ重視の人に。写真も動画もきれい', image: '', pointBack: 0,
-      variants: [ { cap: '256GB', price: 222900 }, { cap: '512GB', price: 274800 }, { cap: '1TB', price: 300800 } ] },
-    { id: 'ipair',      brand: 'iPhone', name: 'iPhone Air',        comment: 'いちばん薄くて軽い。持ちやすさ重視', image: '', pointBack: 0,
-      variants: [ { cap: '256GB', price: 185900 }, { cap: '512GB', price: 231800 }, { cap: '1TB', price: 277800 } ] },
-    { id: 'ip17',       brand: 'iPhone', name: 'iPhone 17',         comment: '定番。性能と値段のバランス型', image: '', pointBack: 0,
-      variants: [ { cap: '256GB', price: 159800 } ] },
-    { id: 'ip16e',      brand: 'iPhone', name: 'iPhone 16e',        comment: 'iPhoneをなるべく安く持ちたい人に', image: '', pointBack: 0,
-      variants: [ { cap: '128GB', price: 104800 } ] },
-    { id: 'ip16promax', brand: 'iPhone', name: 'iPhone 16 Pro Max', comment: '1世代前の大画面Pro。今も高性能', image: '', pointBack: 0,
-      variants: [ { cap: '256GB', price: 224800 }, { cap: '512GB', price: 260800 }, { cap: '1TB', price: 286800 } ] },
-    { id: 'ip16pro',    brand: 'iPhone', name: 'iPhone 16 Pro',     comment: '1世代前のPro。カメラがきれい', image: '', pointBack: 0,
-      variants: [ { cap: '128GB', price: 181800 }, { cap: '256GB', price: 205900 }, { cap: '512GB', price: 242800 }, { cap: '1TB', price: 278800 } ] },
-    { id: 'ip16plus',   brand: 'iPhone', name: 'iPhone 16 Plus',    comment: '大きい画面で電池も長持ち', image: '', pointBack: 0,
-      variants: [ { cap: '128GB', price: 158800 }, { cap: '256GB', price: 180800 }, { cap: '512GB', price: 218900 } ] },
-    { id: 'ip16',       brand: 'iPhone', name: 'iPhone 16',         comment: '1世代前の定番。値段を抑えたい人に', image: '', pointBack: 0,
-      variants: [ { cap: '128GB', price: 141700 } ] },
-    // ===== Android =====
-    // 出典: 各機種の公式製品ページ（https://network.mobile.rakuten.co.jp/product/smartphone/<機種>/）2026-09-19 調査。容量が公式で確認できない機種は cap を空にしている
-    // --- Google Pixel ---
-    { id: 'px11pro',  brand: 'Android', maker: 'Google Pixel', name: 'Google Pixel 11 Pro', comment: 'Googleの最上位。カメラとAI機能が強い', image: '', pointBack: 0, variants: [ { cap: '', price: 189900 } ] },
-    { id: 'px11',     brand: 'Android', maker: 'Google Pixel', name: 'Google Pixel 11',     comment: 'Googleの最新。写真がきれいで使いやすい', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 139900 } ] },
-    { id: 'px10pro',  brand: 'Android', maker: 'Google Pixel', name: 'Google Pixel 10 Pro', comment: '1世代前の上位。今も十分高性能', image: '', pointBack: 0, variants: [ { cap: '', price: 184990 } ] },
-    { id: 'px10',     brand: 'Android', maker: 'Google Pixel', name: 'Google Pixel 10',     comment: '1世代前の定番。バランス型', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 136990 } ] },
-    { id: 'px10a',    brand: 'Android', maker: 'Google Pixel', name: 'Google Pixel 10a',    comment: 'Pixelを手ごろに。ふつうに使うなら十分', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 89760 } ] },
-    // --- Galaxy ---
-    { id: 'gs26u',    brand: 'Android', maker: 'Galaxy', name: 'Galaxy S26 Ultra',   comment: '最上位。ペン付きで大画面・最高カメラ', image: '', pointBack: 0, variants: [ { cap: '', price: 219840 } ] },
-    { id: 'gs26p',    brand: 'Android', maker: 'Galaxy', name: 'Galaxy S26+',        comment: '大きい画面で電池も長持ち', image: '', pointBack: 0, variants: [ { cap: '', price: 169920 } ] },
-    { id: 'gs26',     brand: 'Android', maker: 'Galaxy', name: 'Galaxy S26',         comment: 'Galaxyの最新標準モデル', image: '', pointBack: 0, variants: [ { cap: '', price: 136800 } ] },
-    { id: 'gzfold8u', brand: 'Android', maker: 'Galaxy', name: 'Galaxy Z Fold8 Ultra', comment: '本のように開く折りたたみの最上位', image: '', pointBack: 0, variants: [ { cap: '', price: 299900 } ] },
-    { id: 'gzfold8',  brand: 'Android', maker: 'Galaxy', name: 'Galaxy Z Fold8',     comment: '開くとタブレットサイズになる折りたたみ', image: '', pointBack: 0, variants: [ { cap: '', price: 269900 } ] },
-    { id: 'gzflip8',  brand: 'Android', maker: 'Galaxy', name: 'Galaxy Z Flip8',     comment: 'パカッと閉じる折りたたみ。小さく持てる', image: '', pointBack: 0, variants: [ { cap: '', price: 199900 } ] },
-    { id: 'ga25',     brand: 'Android', maker: 'Galaxy', name: 'Galaxy A25 5G',      comment: 'いちばん安いGalaxy。電話とLINE中心の人に', image: '', pointBack: 0, variants: [ { cap: '', price: 22001 } ] },
-    // --- AQUOS ---
-    { id: 'aqr10',    brand: 'Android', maker: 'AQUOS', name: 'AQUOS R10',      comment: 'AQUOSの上位。カメラと画面がきれい', image: '', pointBack: 0, variants: [ { cap: '', price: 109990 } ] },
-    { id: 'aqs10',    brand: 'Android', maker: 'AQUOS', name: 'AQUOS sense10',  comment: '電池長持ちの定番。ふつうに使うなら十分', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 59900 } ] },
-    { id: 'aqs9',     brand: 'Android', maker: 'AQUOS', name: 'AQUOS sense9',   comment: '1世代前の定番。値段を抑えたい人に', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 55900 } ] },
-    { id: 'aqw6',     brand: 'Android', maker: 'AQUOS', name: 'AQUOS wish6',    comment: 'シンプルで丈夫。安く持ちたい人に', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 44900 } ] },
-    { id: 'aqw5',     brand: 'Android', maker: 'AQUOS', name: 'AQUOS wish5',    comment: '1世代前のシンプル機。いちばん安いAQUOS', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 31900 } ] },
-    // --- arrows ---
-    { id: 'arA2',     brand: 'Android', maker: 'arrows', name: 'arrows Alpha2', comment: '日本メーカーの高性能機。丈夫で使いやすい', image: '', pointBack: 0, variants: [ { cap: '256GB', price: 85900 } ] },
-    { id: 'arA',      brand: 'Android', maker: 'arrows', name: 'arrows Alpha',  comment: '1世代前の高性能機。容量が大きい', image: '', pointBack: 0, variants: [ { cap: '512GB', price: 69900 } ] },
-    { id: 'arWe3',    brand: 'Android', maker: 'arrows', name: 'arrows We3',    comment: '文字が大きく操作がシンプル。初めての人に', image: '', pointBack: 0, variants: [ { cap: '', price: 34980 } ] },
-    // --- OPPO ---
-    { id: 'opr15a',   brand: 'Android', maker: 'OPPO', name: 'OPPO Reno15 A', comment: '軽くて電池長持ち。値段と性能のバランス型', image: '', pointBack: 0, variants: [ { cap: '', price: 57990 } ] },
-    { id: 'opr13a',   brand: 'Android', maker: 'OPPO', name: 'OPPO Reno13 A', comment: '1世代前のバランス型。安く持ちたい人に', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 43890 } ] },
-    { id: 'opa5',     brand: 'Android', maker: 'OPPO', name: 'OPPO A5 5G',    comment: 'いちばん安いOPPO。電話とLINE中心の人に', image: '', pointBack: 0, variants: [ { cap: '', price: 22001 } ] },
-    // --- Nothing ---
-    { id: 'np3',      brand: 'Android', maker: 'Nothing', name: 'Nothing Phone (3)',      comment: '背面が光るデザイン重視の上位機', image: '', pointBack: 0, variants: [ { cap: '256GB', price: 95990 } ] },
-    { id: 'np4apro',  brand: 'Android', maker: 'Nothing', name: 'Nothing Phone (4a) Pro', comment: 'デザイン重視のミドル上位。カメラも良い', image: '', pointBack: 0, variants: [ { cap: '256GB', price: 78900 } ] },
-    { id: 'np3a',     brand: 'Android', maker: 'Nothing', name: 'Nothing Phone (3a)',     comment: 'おしゃれで手ごろ。個性を出したい人に', image: '', pointBack: 0, variants: [ { cap: '128GB', price: 46900 } ] },
-    { id: 'np3alite', brand: 'Android', maker: 'Nothing', name: 'Nothing Phone (3a) Lite', comment: 'Nothingのいちばん安いモデル', image: '', pointBack: 0, variants: [ { cap: '', price: 35900 } ] },
-    // --- その他 ---
-    { id: 'motog37j', brand: 'Android', maker: 'motorola', name: 'moto g37j',  comment: '安くて電池長持ち。サブ機にも', image: '', pointBack: 0, variants: [ { cap: '', price: 22990 } ] },
-    { id: 'nubias2r', brand: 'Android', maker: 'ZTE', name: 'nubia S2R',       comment: 'いちばん安い価格帯。とにかく安く持ちたい人に', image: '', pointBack: 0, variants: [ { cap: '', price: 22001 } ] },
+    { id: 'sample_iphone',  brand: 'iPhone',  name: 'iPhone（サンプル）',  comment: '体験用のサンプル機種です', image: '', pointBack: 0,
+      variants: [ { cap: '', price: 140000 } ] },
+    { id: 'sample_android', brand: 'Android', name: 'Android（サンプル）', comment: '体験用のサンプル機種です', image: '', pointBack: 0,
+      variants: [ { cap: '', price: 60000 } ] },
   ],
   noDeviceLabel: '製品は買わない（今のスマホを使う）',
 
@@ -374,9 +296,7 @@ const MASTER = {
 /* ===================== 状態（ここから下はロジック） ===================== */
 // 画面に出す文字はすべて上の MASTER（このファイル内の固定値）だけ。利用者が文字を入力する欄は無い。
 const initialState = () => ({
-  contractId: MASTER.contractTypes[0].id,
   tierId: null,
-  discounts: {},
   brand: 'none',                       // 'none' = 製品は買わない / それ以外は MASTER.devices の brand
   deviceId: null,
   variantIdx: 0,                       // 選択中の容量（variants の添字）
@@ -406,7 +326,7 @@ function installment(device, paymentId) {
   return { monthly, last: device.price - monthly * (pay.months - 1), months: pay.months };
 }
 
-// 8章の計算式: プラン ＋ オプション ＋ 端末分割 － 割引 ＝ 月額合計（0円未満は0円）
+// 計算式: プラン ＋ オプション ＋ 端末分割 ＝ 月額合計（0円未満は0円）
 function calc() {
   const tier = find(MASTER.plan.tiers, state.tierId);
   const planPrice = tier ? tier.price : 0;
@@ -414,13 +334,10 @@ function calc() {
   const optTotal = opts.reduce((s, o) => s + o.price, 0);
   const device = selectedDevice();
   const inst = installment(device, state.paymentId);
-  const discs = MASTER.discounts.filter((d) => state.discounts[d.id]);
-  const discTotal = discs.reduce((s, d) => s + d.amount, 0);
   const isLump = !!device && state.paymentId === 'lump';
   return {
-    tier, planPrice, opts, optTotal, device, devMonthly: inst.monthly, inst, discs, discTotal,
-    planAfterDiscount: Math.max(0, planPrice - discTotal),
-    total: Math.max(0, planPrice + optTotal + inst.monthly - discTotal),
+    tier, planPrice, opts, optTotal, device, devMonthly: inst.monthly, inst,
+    total: Math.max(0, planPrice + optTotal + inst.monthly),
     initialPayment: isLump ? device.price : 0,
     pointBack: device && device.pointBack ? device.pointBack : 0,
   };
@@ -450,35 +367,21 @@ function viewPlan(c) {
   const p = MASTER.plan;
   const min = Math.min(...p.tiers.map((t) => t.price));
   const max = Math.max(...p.tiers.map((t) => t.price));
-  const contract = MASTER.contractTypes.map((t) => `
-    <button class="choice ${state.contractId === t.id ? 'on' : ''}" data-act="contract" data-id="${t.id}">
-      ${t.label}${t.sub ? `<small>${t.sub}</small>` : ''}
-    </button>`).join('');
   const tiers = p.tiers.map((t) => `
     <button class="tier ${state.tierId === t.id ? 'on' : ''}" data-act="tier" data-id="${t.id}">
       <span class="gb">${t.label}</span>
       <span class="price">${yen(t.price)}<span style="font-size:12px;font-weight:600">/月</span></span>
       <span class="hint">${t.hint}</span>
     </button>`).join('');
-  const discs = MASTER.discounts.map((d) => `
-    <button class="check ${state.discounts[d.id] ? 'on' : ''}" data-act="discount" data-id="${d.id}" aria-pressed="${!!state.discounts[d.id]}">
-      <span class="box">${state.discounts[d.id] ? '✓' : ''}</span>
-      <span class="body"><span class="name">${d.name}</span><span class="desc">${d.desc}</span></span>
-      <span class="price minus">−${yen(d.amount)}</span>
-    </button>`).join('');
   const totalRow = c.tier
-    ? `<div class="v">${yen(c.planAfterDiscount)}<small>/月</small></div>${c.discTotal ? `<div class="note">${p.name} ${yen(c.planPrice)} − 割引 ${yen(c.discTotal)}</div>` : ''}`
+    ? `<div class="v">${yen(c.planPrice)}<small>/月</small></div>`
     : `<div class="v range">${yen(min)}〜${yen(max)}</div><div class="note">毎月のデータ量を選ぶと金額が決まります</div>`;
   return `
     <h2>料金プラン</h2>
-    <div class="label">申込区分</div>
-    <div class="choice-grid">${contract}</div>
     <div class="label">料金プラン</div>
     <button class="plan-btn" data-act="none"><span class="pn">${p.name}</span><span class="pr">${yen(min)}〜${yen(max)}/月（税込）</span></button>
     <div class="label">毎月どれくらい使う？（データ量）</div>
     <div class="tiers">${tiers}</div>
-    <div class="label">割引</div>
-    <div>${discs}</div>
     <div class="panel-total"><div class="k">プランの月々のお支払い金額</div>${totalRow}</div>`;
 }
 
@@ -491,7 +394,7 @@ function viewDevice(c) {
   const modelOpts = makers.length
     ? makers.map((m) => `<optgroup label="${m}">${models.filter((d) => d.maker === m).map(opt).join('')}</optgroup>`).join('')
     : models.map(opt).join('');
-  const modelSel = state.brand === 'none' ? '' : `
+  const modelSel = (state.brand === 'none' || models.length <= 1) ? '' : `
     <div class="select" style="margin-top:10px"><select data-act="model" aria-label="機種">${modelOpts}</select></div>`;
   const d = c.device;
   const base = find(MASTER.devices, state.deviceId);
@@ -554,7 +457,7 @@ function viewOptions(c) {
 
 function viewSummary(c) {
   const parts = [
-    { cls: 's-plan', v: c.planAfterDiscount, label: 'プラン' },
+    { cls: 's-plan', v: c.planPrice,        label: 'プラン' },
     { cls: 's-opt',  v: c.optTotal,          label: 'オプション' },
     { cls: 's-dev',  v: c.devMonthly,        label: '製品代金' },
   ].filter((p) => p.v > 0);
@@ -582,7 +485,6 @@ function viewSummary(c) {
           <span>プラン<b>${yen(c.planPrice)}</b></span>
           <span>オプション<b>${yen(c.optTotal)}</b></span>
           <span>製品代金<b>${yen(c.devMonthly)}</b></span>
-          <span class="minus">割引<b>−${yen(c.discTotal)}</b></span>
         </div>
       </div>
       <div class="total" aria-live="polite">
@@ -602,9 +504,7 @@ function handle(act, id) {
       navLockUntil = now + 400;
       state = initialState(); lastTotal = null; window.scrollTo(0, 0); break;
     }
-    case 'contract': state.contractId = id; break;
     case 'tier':     state.tierId = id; break;
-    case 'discount': state.discounts = { ...state.discounts, [id]: !state.discounts[id] }; break;
     case 'option':   state.options = { ...state.options, [id]: !state.options[id] }; break;
     case 'payment':  if (find(MASTER.payments, id)) state.paymentId = id; break;
     case 'brand': {
