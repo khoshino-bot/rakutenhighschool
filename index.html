@@ -245,10 +245,10 @@
 /* =====================================================================
    ★★ マスタデータ（ここだけ直せば全画面に反映されます） ★★
    ---------------------------------------------------------------------
-   投入日: 2026-09-22
+   投入日: 2026-09-22（2026-09-25 更新：通話かけ放題に改名／48回払いのみ／「製品は買わない」を削除）
    注意 : 金額と名称はすべて「仮の値（体験用のサンプル）」です。店頭で使う最新の公式価格に
           差し替えてから使ってください（税込の整数で入力）。
-          製品は「製品は買わない／iPhone／Android」の3択。プラン名は独自の名前にしています。
+          製品は「iPhone／Android」の2択、支払いは48回払いのみ。プラン名は独自の名前にしています。
    ===================================================================== */
 const MASTER = {
 
@@ -264,14 +264,14 @@ const MASTER = {
 
   // ---- オプション（複数選択可）----
   options: [
-    { id: 'call15',   name: '15分かけ放題',           who: '普通の電話をよくかける人に（アプリ通話は元から無料）', price: 1100 },
+    { id: 'call15',   name: '通話かけ放題',           who: '普通の電話をよくかける人に（アプリ通話は元から無料）', price: 1100 },
     { id: 'warranty', name: 'スマホ保証（故障・紛失）',  who: 'よく落とす・壊しやすい人に',                          price: 1100 },
     { id: 'security', name: 'ウイルス対策',            who: '怪しいサイトやメールが心配な人に',                    price: 220 },
     { id: 'filter',   name: 'あんしんフィルター',        who: '子どものスマホの使い方を保護者が管理したい家庭に',      price: 330 },
     { id: 'remote',   name: '電話でスマホ操作サポート',   who: 'スマホの使い方を電話で教えてほしい人に',               price: 550 },
   ],
 
-  // ---- 製品（「製品は買わない」／iPhone／Android の3択）----
+  // ---- 製品（iPhone／Android の2択。最初は未選択）----
   // 体験用のダミーデータ。機種を増やしたい場合はここに行を足す（brand は 'iPhone' か 'Android'）。
   // variants を2つ以上入れると容量の選択ボタンが、同じ brand に2機種以上入れると機種のプルダウンが出る。
   devices: [
@@ -280,12 +280,10 @@ const MASTER = {
     { id: 'sample_android', brand: 'Android', name: 'Android（サンプル）', comment: '体験用のサンプル機種です', image: '', pointBack: 0,
       variants: [ { cap: '', price: 60000 } ] },
   ],
-  noDeviceLabel: '製品は買わない（今のスマホを使う）',
+  noDeviceLabel: '製品を選んでください',   // 未選択のときの表示（選択肢には出さない）
 
-  // ---- 支払回数（months が 0 のものは一括）----
+  // ---- 支払回数（months が 0 のものは一括）。行を足せば選択ボタンが増える ----
   payments: [
-    { id: 'lump', label: '一括払い', months: 0 },
-    { id: 'p24',  label: '24回払い', months: 24 },
     { id: 'p48',  label: '48回払い', months: 48 },
   ],
   defaultPayment: 'p48',
@@ -297,7 +295,7 @@ const MASTER = {
 // 画面に出す文字はすべて上の MASTER（このファイル内の固定値）だけ。利用者が文字を入力する欄は無い。
 const initialState = () => ({
   tierId: null,
-  brand: 'none',                       // 'none' = 製品は買わない / それ以外は MASTER.devices の brand
+  brand: 'none',                       // 'none' = 製品が未選択 / それ以外は MASTER.devices の brand
   deviceId: null,
   variantIdx: 0,                       // 選択中の容量（variants の添字）
   paymentId: MASTER.defaultPayment,
@@ -386,7 +384,7 @@ function viewPlan(c) {
 }
 
 function viewDevice(c) {
-  const brandOpts = [`<option value="none" ${state.brand === 'none' ? 'selected' : ''}>${MASTER.noDeviceLabel}</option>`]
+  const brandOpts = [`<option value="none" disabled ${state.brand === 'none' ? 'selected' : ''}>${MASTER.noDeviceLabel}</option>`]
     .concat(brands.map((b) => `<option value="${b}" ${state.brand === b ? 'selected' : ''}>${b}</option>`)).join('');
   const models = MASTER.devices.filter((d) => d.brand === state.brand);
   const opt = (d) => `<option value="${d.id}" ${state.deviceId === d.id ? 'selected' : ''}>${d.name}</option>`;
@@ -417,7 +415,7 @@ function viewDevice(c) {
           <div class="dp">${yen(d.price)}<small>本体価格・税込</small></div></div>
       </div>
       <div class="label">お支払い方法</div>
-      <div class="choice-grid cols3">${pays}</div>`;
+      <div class="choice-grid" style="grid-template-columns:repeat(${MASTER.payments.length}, 1fr)">${pays}</div>`;
     if (c.inst.months) {
       view += `<div class="split">
         <div><div class="k">1〜${c.inst.months - 1}回目のお支払い金額</div><div class="v">${yen(c.inst.monthly)}</div></div>
@@ -430,7 +428,7 @@ function viewDevice(c) {
     if (d.pointBack) view += `<p class="note" style="margin:12px 0 0">別途 <b>${d.pointBack.toLocaleString('ja-JP')}ポイント</b> 還元（月額には含めていません）</p>`;
   } else {
     view = `<div class="device-view"><div class="img"><svg viewBox="0 0 60 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="4" y="2" width="52" height="106" rx="10" fill="none" stroke="#94a3b8" stroke-width="3" stroke-dasharray="6 5"/></svg></div>
-      <div><div class="dn">今のスマホをそのまま使う</div><div class="dc">製品代金は 0円。買う場合は上のメニューから iPhone または Android を選んでください</div></div></div>`;
+      <div><div class="dn">製品を選んでください</div><div class="dc">上のメニューから iPhone または Android を選ぶと、製品代金が出ます</div></div></div>`;
   }
   return `
     <h2>製品</h2>
