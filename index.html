@@ -220,6 +220,65 @@
     .total { text-align: left; }
     .total .v { font-size: 44px; }
   }
+
+  /* ===== iPad 横向き（4:3）: 3列＋支払いイメージを1画面に収める（スクロールなし） ===== */
+  @media (min-width: 900px) and (max-width: 1366px) and (orientation: landscape) {
+    :root { --header-h: 60px; }
+    .logo .mark { width: 36px; height: 36px; font-size: 18px; }
+    .logo .name { font-size: 18px; }
+    .main {
+      height: 100vh; height: 100dvh; display: flex; flex-direction: column; gap: 12px;
+      padding: calc(var(--header-h) + 12px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) calc(14px + env(safe-area-inset-left));
+    }
+    .cols { flex: 1; min-height: 0; grid-template-columns: 1fr 1fr 1fr; gap: 12px; align-items: stretch; }
+    .cols .panel:nth-child(3) { grid-column: auto; }
+    .panel { padding: 16px 18px; display: flex; flex-direction: column; min-height: 0; overflow-y: auto; }
+    .panel h2 { font-size: 22px; margin-bottom: 10px; }
+    .label { margin: 12px 0 6px; font-size: 13px; }
+    .note { font-size: 13px; }
+    .plan-btn { min-height: 60px; padding: 8px 12px; }
+    .plan-btn .pn { font-size: 18px; }
+    .plan-btn .pr { font-size: 13px; }
+    .tiers { gap: 8px; }
+    .tier { display: grid; grid-template-columns: auto 1fr; column-gap: 10px; row-gap: 0; min-height: 0; padding: 8px 12px; }
+    .tier .gb { width: auto; font-size: 18px; }
+    .tier .price { font-size: 17px; text-align: right; }
+    .tier .hint { grid-column: 1 / -1; font-size: 12.5px; line-height: 1.45; }
+    .select select { min-height: 52px; font-size: 17px; }
+    .device-view { gap: 12px; padding: 12px; }
+    .device-view .img { width: 64px; height: 92px; }
+    .device-view .img svg { height: 84px; }
+    .device-view .dn { font-size: 16px; }
+    .device-view .dc { font-size: 13px; }
+    .device-view .dp { font-size: 20px; }
+    .device-view { margin-top: 10px; }
+    .device-view .dp small { display: block; margin-left: 0; font-size: 12px; line-height: 1.4; }
+    .choice.big { min-height: 58px; padding: 6px 12px; }
+    .choice.big .title { font-size: 18px; }
+    .split { margin-top: 12px; }
+    .split div { padding: 0; border-left: none !important; }
+    .split > div { padding: 8px 6px 0; }
+    .split > div + div { border-left: 1px solid var(--border) !important; }
+    .split .k { font-size: 12px; line-height: 1.4; }
+    .split .v { font-size: 20px; }
+    .check { gap: 10px; min-height: 48px; padding: 5px 4px; }
+    .check .box { width: 26px; height: 26px; }
+    .check .name { font-size: 15px; }
+    .check .desc { font-size: 12.5px; line-height: 1.45; }
+    .check .price { font-size: 15px; }
+    .panel-total { margin-top: auto; padding-top: 10px; }
+    .panel > :nth-last-child(2) { margin-bottom: 12px; }
+    .panel-total .v { font-size: 24px; }
+    .panel-total .v.range { font-size: 19px; }
+    .summary { position: static; flex: none; margin-top: 0; padding: 12px 20px; }
+    .summary h2 { font-size: 21px; }
+    .sum-body { margin-top: 8px; gap: 20px; }
+    .bar { height: 44px; }
+    .breakdown { margin-top: 8px; font-size: 14px; }
+    .total { min-width: 220px; }
+    .total .v { font-size: 44px; }
+    .total .extra { margin-top: 4px; font-size: 13px; }
+  }
 </style>
 </head>
 <body>
